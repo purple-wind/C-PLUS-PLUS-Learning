@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project(asio_s)
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 ")
+add_executable(asio_s boost_asio3.cpp)
+target_link_libraries(asio_s pthread boost_system boost_thread )
