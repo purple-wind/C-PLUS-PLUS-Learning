@@ -139,9 +139,13 @@ int main ( int argc, char **argv )
       std::cout<<er.what() <<std::endl;
     }
 
-//friend，友元
-  B b;
-  b.run();
+std::cout<<"------------------友元-------------------"<<std::endl;      
+  Base base;
+  Derived_a ba;
+  Derived_b bb;
+  bb.print1(base);
+  bb.pirnt2(ba);
+  
 
 
   std::cout<<"-----------枚举和联合------------------"<<std::endl;

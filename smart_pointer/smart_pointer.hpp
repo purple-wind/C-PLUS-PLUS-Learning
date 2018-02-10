@@ -18,7 +18,7 @@ class SmartPointer{
 public:
 	void construction()
 	{
-		std::shared_ptr<int>int1_ptr;//默认初始化的只能指针保存着空指针
+		std::shared_ptr<int>int1_ptr;//默认初始化的智能指针保存着空指针
 		std::shared_ptr<int>int2_ptr(new int(10));//
 
 	}
