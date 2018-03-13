@@ -49,7 +49,7 @@ private:
 // 其中std::placeholders_n表示绑定到的最终函数对象的参数n,变量n表示的是事先传递的变量
 // 3.当被绑定的函数是类的静态成员函数时,bind的参数和全局一样；
 // 4.当被绑定的函数是类的非静态成员函数时,bind的参数分别是　&类名::成员函数名、类的实体对象、 变量1.....变量n、 std::placeholders::_1....std::placeholders::_n;
-//
+// 5.bind函数传递的参数是拷贝的方式传递，即传递给它的参数在函数内部的改变不会影响到外部，如果想传递引用，则使用ref
 //
 class My_Bind :public PrintString {
 public:
@@ -59,6 +59,7 @@ public:
 
    static int static_number(int a,int b,int c)
     {
+		a++;
         std::cout<<"static:a="<<a<<"  b="<<b<<" c="<<c<<std::endl;
     }
   int no_static_number(int a,int b,int c)
@@ -79,6 +80,12 @@ public:
 		new_fun1(-1,-2,-3);
 		auto new_fun2=bind(&My_Bind::no_static_number,this,1,2,std::placeholders::_1);
 		new_fun2(4);
+		
+		int out=10;
+		auto new_fun3=bind(static_number,out,2,std::placeholders::_1);
+		new_fun3(3);//因为bind参数是值传递，此时如果在static_number内改变了a的值，不会影响到外部的out的值。
+		//如果想在内部改变a的值也影响到外部的out则使用ref
+		auto new_fun4=bind(static_number,std::ref(out),2,std::placeholders::_1);
 		
 		std::function<int(int,int,int)>f=static_number;
 		f(1,2,3);

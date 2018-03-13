@@ -66,15 +66,12 @@ public:
         std::cout<<"right value="<<right_value<<std::endl;
     }
 
-// 	牛叉的std::move()，标准库使用这一特性的经典例子
-    template<typename T> typename std::remove_reference<T>::type&& move ( T&& t ) {
-        return static_cast<typename std::remove_reference<T>::type&&> ( t );
-    }
+
     void infer() {
         int value1=1;
         left_refer ( value1 );
         const_left_refer ( value1 );
-        right_refer ( 1 );
+        right_refer ( 1 );//该处调用函数内部推断出的T类型是传递参数的类型，即int类型
         std::cout<<"value1="<<value1<<std::endl;
     }
 
@@ -111,9 +108,16 @@ public:
         right_refer(value1);//函数形参为右值引用类型且实参是int(左值)，所以模板类型为实参类型的引用,即T=int&;参数形式为int& &&,折叠为int&
         right_refer ( refer1 ); //函数形参为右值引用类型，实参为int(左值)，所以模板类型为实参类型的引用，即T=int&;参数形式为int& &&,折叠为int&
         right_refer ( refer ); //函数形参为右值引用类型，且实参为int&&(左值);所以模板类型为实参类型，即T=int&;此时的形参形式为int& &&,折叠为int&
-        right_refer (1); //函数形参为右值引用类型，且实参为int(右值);所以模板类型为实参类型，即T=int;此时的形参形式为int &&
+        right_refer (1); //函数形参为右值引用类型，且实参为int(右值);所以模板类型为实参类型，即T=int;此时的形参形式为int &&,折叠之后还是int&&
         std::cout<<"value1="<<value1<<std::endl;
     }
+    
+
+
+// 	牛叉的std::move()，标准库使用这一特性的经典例子
+    template<typename T> typename std::remove_reference<T>::type&& move ( T&& t ) {
+		return static_cast<typename std::remove_reference<T>::type&&> ( t );
+	}
 
 private:
 // 	定义一个比较两个数大小的模板函数，函数返回类型为T,接收两个参数类型为T的参数
@@ -175,7 +179,7 @@ public:
         f1 ( t2,t1 );
     }
 
-//     右值类型的完美转发，使用标准库的std::forward<TYPE>(arg)模板保持实参的右值属性
+//   右值类型的完美转发，使用标准库的std::forward<TYPE>(arg)模板保持实参的右值属性
     template<typename F,typename T1,typename T2> void right_flips ( F f1,T1&& t1,T2&& t2 ) {
         f1 ( std::forward<T2> ( t2 ),std::forward<T1> ( t1 ) );
     }
@@ -194,21 +198,24 @@ public:
 
 
 
-/*可变常参数模板
+/*可变长参数模板
  */
 class VariadicTemplate
 {
 public:
     //模板参数包格式
-    template<typename T,typename...Arg> T foo1 ( T t,Arg...arg ) {
+    template<typename T,typename...Arg> T foo1 ( T t,Arg...arg )
+    {
         std::cout<<"run fool"<<std::endl;
         std::cout<<"foo1  "<<sizeof... ( arg ) <<std::endl;
     }
     //非模板参数类型参数包格式
-    template<int ...N>void foo2() {
+    template<int ...N>void foo2()
+    {
 
     }
-    void test() {
+    void test()
+    {
         foo1 ( 10,'a',"hello" );
     }
 
@@ -218,7 +225,8 @@ public:
 
 //    根据模板参数的重载匹配，当最后一个递归调用到print时，参数包只有一个参数，此时该函数和下面函数的匹配度一样高，
 // 	  但是该函数相对于可变参数模板更特例化，故选择该函数。
-    template<typename T> std::ostream& print ( std::ostream& os,const T& t ) {
+    template<typename T> std::ostream& print ( std::ostream& os,const T& t )
+    {
         return os<<t<<std::endl;
     }
 
@@ -226,7 +234,8 @@ public:
 //  const Args...rest是包扩展，扩展一个包就是将它分解为构成的元素，通过在模式右边放一个省略号来触发包扩展。
 //  下面的例子中对Args的扩展中，编译器将模式const Arg&应用到模板参数包Args中的每个元素，每个参数类型为const type&
 //  对print的调用中rest的扩展中模式是rest，此模式扩展出一个由包中元素组成的、逗号分割的列表。
-    template<typename T,typename...Args> std::ostream& print ( ostream& os,const T&t ,const Args&...rest ) {
+    template<typename T,typename...Args> std::ostream& print ( ostream& os,const T&t ,const Args&...rest )
+    {
         os<<t<<", ";
         return print ( os,rest... );
     }
@@ -237,39 +246,97 @@ public:
 
 
 //模式还可以是一个函数，比如此函数中模式就是print1_used(arg)，表示用参数包中的每个元素调用print1_used
-    template<typename T>T  print1_used ( const T& t ) {
-        std::cout<<"print "<<t<<std::endl;
+    template<typename T>T  print1_used ( const T& t )
+    {
+        std::cout<<"return by mode="<<t<<std::endl;
         return t;
     }
 
-    template<typename T>std::ostream& print1 ( std::ostream& os,const T& t ) {
+    template<typename T>std::ostream& print1 ( std::ostream& os,const T& t )
+    {
         std::cout<<"end="<<t<<std::endl;
         print1_used ( t );
     }
 
-    template<typename T,typename ... Type>std::ostream& print1 ( std::ostream& os,const T& t,const Type& ...arg ) {
-        std::cout<<"sizeof="<<sizeof... ( arg ) <<std::endl;
+    template<typename T,typename ... Type>std::ostream& print1 ( std::ostream& os,const T& t,const Type& ...arg )
+    {
         std::cout<<"arg="<<t<<std::endl;
-        return print1 ( os,print1_used ( arg )... );
+        return print1 ( os,print1_used ( arg )... );//此处的模式是print1_used()函数
+    }
+
+
+    
+    //  可变长参数函数模板的作用通常是将它们的参数转发给其它函数，所以它们一般形式为：
+    // 	template<typename ...Type>fun(Type&&...arg)
+    // 	{
+    // 		work(std::forward<Type>(arg)...);
+    // 	}
+    //     此示例中把fun的可变参数传递给work函数，保持参数的所有属性。
+    // 	 此例中即扩展了模板参数包也扩展了函数参数包
+    template<typename...Type>void forward_print (std::ostream& os, Type&&...args )
+    {
+        print1(os,std::forward<Type> ( args )... ); //此处的模式是std::forward，把forward_print接收到的可变长参数的属性原封不动的转发给print1函数
     }
 
     
-    void test1() {
+   
+    template<typename T> T& add ( T& t )
+    {
+        return ++t;
+    }
+    template<typename T> void expand( T& t )
+    {
+		
+    }
+
+    template<typename T,typename...Args> void expand( T& t ,Args&...rest )
+    {
+        return expand(add(rest)...);
+    }
+    
+    
+    void test1()
+    {
         std::ostream& os=std::cout;
         print ( os,'1',"2","3","4",5,1.1 );
         print1 ( os,1,2,3,1.1 );
+        forward_print ( os,1,2,3,4,5,6 );
+        int a1=1,a2=2,a3=3;
+        expand ( a1,a2,a3 );
+        std::cout<<"a1="<<a1<<"\ta2="<<a2<<"\ta3="<<a3<<std::endl;
+// 		abc();
     }
-
-
-//  可变长参数函数模板的作用通常是将它们的参数转发给其它函数，所以它们一般形式为：
-// 	template<typename ...Type>fun(Type&&...arg)
-// 	{
-// 		work(std::forward<Type>(arg)...);
-// 	}
-//     此示例中把fun的可变参数传递给work函数，保持参数的所有属性。
-// 	 此例中即扩展了模板参数包也扩展了函数参数包
 };
 
+// 类型转换模板
+   void test_traits()
+   {
+	   std::remove_reference<int>::type a_=1;//a_为int型
+	   std::remove_reference<int&>::type a1_=1;//a1_为int型
+	   std::remove_reference<int&&>::type a2_=1;//a2_为int型
+	   
+   
+	   std::add_const<int>::type a=1;//a的类型是const int
+// 	   a=2;//对const变量赋值无法编译通过
+	   
+	   int a1=1;
+	   std::add_const<int&>::type b=a1;//b的类型是int&
+       std::add_const< const int >::type b1=a1;//b1的类型是const int
+	   
+	   std::add_lvalue_reference<int&>::type c=a1;//c的类型是int
+	   std::add_lvalue_reference<int && >::type c1=a1;//c的类型是int&
+	   
+	   std::add_rvalue_reference<int&>::type d=a1;//d的类型为int&
+	   std::add_rvalue_reference<int&&>::type d1=100;//d的类型为int&&
+	   
+	   std::add_pointer<int&>::type e=&a1;//e类型为int*
+	   std::add_pointer<int&&>::type e1=&a1;//e1类型为int*
+	   std::remove_pointer<int*>::type e2=2;//e2类型为int
+	   std::make_signed<unsigned int>::type f=-1;//f类型为有符号数
+	   std::make_unsigned<int>::type f1=-1;//f1为无符号数，如果赋值为-1则-1为该类型最大的无符号数
+	   std::remove_extent<int[10]>::type g=1;//g为有十个整型元素的数组的元素类型int
+	   std::remove_all_extents<int[10][20][30]>::type g1=1;//g1为三位数组的元素类型int
 
+   }
 
 #endif

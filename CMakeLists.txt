@@ -3,7 +3,7 @@ project(test_cplus)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g  ")
 set(SRC_FILE enum_union.cpp
 	operator/operate.cpp
-	my_allocator.cpp
+	smart_pointer/my_allocator.cpp
 )
 add_executable(test_cplus main.cpp ./funcation/funcation.cpp ./stream/my_fstream.cpp ./friend/my_friend.cpp ${SRC_FILE})
 
@@ -16,3 +16,5 @@ add_subdirectory(boost)
 add_subdirectory(algorithm)
 add_subdirectory(oop)
 add_subdirectory(design_patterns)
+add_subdirectory(thread_pool)
+add_subdirectory(move)

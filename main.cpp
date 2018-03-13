@@ -10,7 +10,6 @@
 #include <string.h>
 #include "enum_union.h"
 #include "operator/operate.cpp"
-#include "my_allocator.h"
 
 
 
@@ -69,27 +68,25 @@ int main ( int argc, char **argv )
 
 
 // 函数模板
-  std::cout<<"-------------函数模板----------------"<<std::endl;
-  fun_temp temp;
-  temp.used_fun_temp();
-//     temp.pfun_test();
-// 	temp.infer();
-// 	temp.infer1();
-  temp.infer2();
+    std::cout<<"-------------函数模板----------------"<<std::endl;
+    fun_temp temp;
+    temp.used_fun_temp();
+    temp.pfun_test();
+    temp.infer();
+    temp.infer1();
+    temp.infer2();
 
-//     int a11=100;
-//     int&& a22=std::move(a11);
-//     std::cout<<"a1="<<a11<<std::endl;
-//     a22=200;
-//     std::cout<<"a1="<<a11<<std::endl;
-//     a11=300;
-//     std::cout<<"a1="<<a11<<std::endl;
-//     std::cout<<"a2="<<a22<<std::endl;
-//     a22=200;
-//     std::cout<<"a1="<<a11<<std::endl;
-
-
-
+    int a11=100;
+    int&& a22=std::move ( a11 );
+    std::cout<<"a1="<<a11<<std::endl;
+    a22=200;
+    std::cout<<"a1="<<a11<<std::endl;
+    a11=300;
+    std::cout<<"a1="<<a11<<std::endl;
+    std::cout<<"a2="<<a22<<std::endl;
+    a22=200;
+    std::cout<<"a1="<<a11<<std::endl;
+    test_traits();
 
 // 类模板
   std::cout<<"-----------------类模板--------------"<<std::endl;
@@ -165,11 +162,6 @@ std::cout<<"------------------友元-------------------"<<std::endl;
   Operator op2 ( 1,2,str1 );
   op2=op;
   std::cout<<*op2.get_str() <<std::endl;
-
-  std::cout<<"--------------allocator---------------"<<std::endl;
-// 内存分配器allocator
-  my_allocator a1;
-  a1.used_allocator();
   return 0;
 }
 
