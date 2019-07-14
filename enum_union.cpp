@@ -138,11 +138,18 @@ void enum_union::scopes_enum()
 void enum_union::my_union() 
 {
 	union digital_type test;
-	test.longer=32767;
+    test.longer =32767;
+    std::cout<<"this is test union,member shorter="<<test.shorter<<std::endl;
 	std::cout<<"this is test union,member inter="<<test.inter<<std::endl;
-	std::cout<<"this is test union,member shorter="<<test.shorter<<std::endl;
 	std::cout<<"this is test union,member longer="<<test.longer<<std::endl;
-	
+    std::cout<<"this is test union,merber float="<<test.floater<<std::endl;
+
+    test.floater =32767;
+    std::cout<<"when float\nthis is test union,member shorter="<<test.shorter<<std::endl;
+    std::cout<<"this is test union,member inter="<<test.inter<<std::endl;
+    std::cout<<"this is test union,member longer="<<test.longer<<std::endl;
+    std::cout<<"this is test union,merber float="<<test.floater<<std::endl;
+
 }
 std::__cxx11::string* enum_union::get_str()
 {

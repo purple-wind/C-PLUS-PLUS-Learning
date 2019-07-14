@@ -38,6 +38,7 @@ private:
 	  short shorter;
 	  int inter;
 	  long longer;
+      float floater;
   };
 public:
   std::string* str;
