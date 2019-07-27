@@ -9,12 +9,11 @@ add_executable(test_cplus main.cpp ./funcation/funcation.cpp ./stream/my_fstream
 
 
 add_subdirectory(template)
-add_subdirectory(smart_pointer)
 add_subdirectory(throw_try_catch)
 add_subdirectory(friend)
 add_subdirectory(boost)
 add_subdirectory(algorithm)
 add_subdirectory(oop)
-add_subdirectory(design_patterns)
-add_subdirectory(thread_pool)
-add_subdirectory(move)
+# add_subdirectory(move)
+# add_subdirectory(common)
+add_subdirectory(design_pattern)
