@@ -2,6 +2,7 @@
 #include "./funcation/funcation.cpp"
 #include "container/sequential_container.hpp"
 #include "container/unordered_container.hpp"
+#include "container/tvector.hpp"
 #include "./stream/my_fstream.h"
 #include "template/fun_template.hpp"
 #include "template/class_temp.hpp"
@@ -32,6 +33,10 @@ int main ( int argc, char **argv )
 {
 //     容器
   std::cout<<"------------------容器-------------------"<<std::endl;
+  vector_test vct_test;
+  vct_test.test_index_operator();
+  
+  
   Container test_container;
   test_container.test_assign();
   test_container.test_wsap();
@@ -162,6 +167,10 @@ std::cout<<"------------------友元-------------------"<<std::endl;
   Operator op2 ( 1,2,str1 );
   op2=op;
   std::cout<<*op2.get_str() <<std::endl;
+  
+ //可变长参数宏的使用方法 
+#define PT(format,...) printf(format,##__VA_ARGS__);
+  PT("%s","hello\n")
   return 0;
 }
 

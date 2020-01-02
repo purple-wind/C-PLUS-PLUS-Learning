@@ -36,9 +36,20 @@ public:
     }
 
     void test_size()
-	{
+    {
 		std::cout<<"size="<<s_vec.size()<<std::endl;//size函数计算的是当前容器中的实际存在的元素个数
-	}
+    }
+    
+    void test_index_operator()
+    {
+        //使用下标操作取出第一个元素值并修改，遍历发现第一个值发生变化，说明vector下表操作返回的是元素的引用。实际上map的下标操作也返回的是元素的引用
+        //注意如果vecotr是空的，则vector的下标操作行为是未定义的
+        s_vec[0] = "test_index_operator";
+        for(vector<string>::value_type it:s_vec)
+        {
+            std::cout<<it<<std::endl;
+        }    
+    }
 
 private:
     vector<string>s_vec;

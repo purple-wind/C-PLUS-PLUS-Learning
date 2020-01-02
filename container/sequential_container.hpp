@@ -18,13 +18,13 @@
 class Container {
 public:
     std::vector<int>vec1{1,1,1,1,1};
-	std::vector<int>vec2{12,12,12,12,12};
+    std::vector<int>vec2{12,12,12,12,12};
     std::deque<int>deq{2,2,2,2,2};
     std::list<int>lis{3,3,3,3,3};
     std::forward_list<int>forward{4,4,4,4,4};
 //     std::array<int,5>arr{5,5,5,5,5};arr暂不支持类内初始化
-	std::array<int,5>arr1;
-	std::array<int,5>arr2;
+    std::array<int,5>arr1;
+    std::array<int,5>arr2;
     std::string str1{'6','6','6','6','6'};
     std::string str2{'7','7','7','7','7'};
 Container():arr1({5,5,5,5,5}),arr2({51,52,53,54,55}){}
