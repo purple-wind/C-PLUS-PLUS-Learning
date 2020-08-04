@@ -12,6 +12,18 @@
 #include<errno.h>
 using namespace std;
 
+void str_to_number()
+{
+    std::cout<<std::stoi("1243") - 1<<std::endl;
+    std::cout<<std::stol("1243.3") - 1<<std::endl;
+    std::cout<<std::stof("1243.333333") - 1<<std::endl;
+    std::cout<<std::stod("1243.333333") - 1<<std::endl;
+    std::cout<<std::stoul("-1") - 1<<std::endl;
+    std::cout<<std::stoull("1243.333333") - 1<<std::endl;
+    std::cout<<std::stoull("1243.333333") - 1<<std::endl;
+    std::cout<<std::stold("1243.333333") - 1<<std::endl;
+}
+
 
 
 // int main()
