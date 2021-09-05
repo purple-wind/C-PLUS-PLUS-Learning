@@ -45,7 +45,7 @@ private:
   SingleTon()
   {
     m_mutex = new pthread_mutex_t();
-    pthread_mutex_init ( m_mutex,0 );
+    pthread_mutex_init (m_mutex, 0);
   }
   //该类的唯一作用是用于析构SingleTon唯一对象，用于释放系统资源(例如文件描述符等)  
   class Garbo{
@@ -89,15 +89,19 @@ public:
     static SingleTon1* get_instance()
     {
         //局部静态特性的方式实现单实例
+        pthread_mutex_lock(m_mutex);
         static SingleTon1 instance;
-        return instance;
+        m_instance = &instance;
+        pthread_mutex_unlock(m_mutex);
+        return m_instance;
     }
+    
 private:
     //禁止构造
     SingleTon1()
     {
         m_mutex = new pthread_mutex_t();
-        pthread_mutex_init ( m_mutex,0 );
+        pthread_mutex_init(m_mutex, 0);
     }
 
     //禁止拷贝构造
@@ -106,7 +110,7 @@ private:
     }
 
     //禁止拷贝赋值
-    SintleTon1& operator=(SingleTon1& rhs)
+    SingleTon1& operator=(SingleTon1& rhs)
     {
 
     }
@@ -118,8 +122,11 @@ private:
     }
 
 private:
-    std::string str = "hello singleton";
+    std::string str = "hello singleton1";
+    static pthread_mutex_t* m_mutex;
+    static SingleTon1* m_instance;
 };
 
-
+pthread_mutex_t* SingleTon1::m_mutex = nullptr;
+SingleTon1* SingleTon1::m_instance = nullptr;
 #endif // SINGLETON_H
