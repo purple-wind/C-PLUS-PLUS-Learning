@@ -74,24 +74,32 @@ public:
     {
         PrintString::operator()("I'm PrintString operator()");
         this->operator()();
-		auto new_fun1=bind(static_number,1,2,std::placeholders::_1);
-		new_fun1(3);
-		std::cout<<"here"<<std::endl;
-		new_fun1(-1,-2,-3);
-		auto new_fun2=bind(&My_Bind::no_static_number,this,1,2,std::placeholders::_1);
-		new_fun2(4);
-		
-		int out=10;
-		auto new_fun3=bind(static_number,out,2,std::placeholders::_1);
-		new_fun3(3);//因为bind参数是值传递，此时如果在static_number内改变了a的值，不会影响到外部的out的值。
-		//如果想在内部改变a的值也影响到外部的out则使用ref
-		auto new_fun4=bind(static_number,std::ref(out),2,std::placeholders::_1);
-		
-		std::function<int(int,int,int)>f=static_number;
-		f(1,2,3);
-// 		std::mem_fn(this->no_static_number);
+	auto new_fun1=bind(static_number,1,2,std::placeholders::_1);
+	new_fun1(3);
+	std::cout<<"here"<<std::endl;
+	new_fun1(-1,-2,-3);
+	auto new_fun2=bind(&My_Bind::no_static_number,this,1,2,std::placeholders::_1);
+	new_fun2(4);
+
+	int out=10;
+	auto new_fun3=bind(static_number,out,2,std::placeholders::_1);
+	new_fun3(3);//因为bind参数是值传递，此时如果在static_number内改变了a的值，不会影响到外部的out的值。
+	//如果想在内部改变a的值也影响到外部的out则使用ref
+	auto new_fun4=bind(static_number,std::ref(out),2,std::placeholders::_1);
+
+	std::function<int(int,int,int)>f=static_number;
+	f(1,2,3);
+	//std::mem_fn(this->no_static_number);
     }
 };
 
+C++11以后，对于函数模板实参，可以让调用者决定是传值还是传引用。当函数模板声明为值传递方式传递参数，
+调用者可以使用std::cref()和std::ref()来以引用方式传递参数，他们在头文件<functional>中声明。
+对于std::bind或std::thread中只能使用std::ref 和 std::cref 不能使用&。
+std::ref 和 std::cref 只是尝试模拟引用传递，并不能真正变成引用，在非模板情况下，std::ref根本没法
+实现引用传递，只有模板自动推到类型时，ref能包装类型reference_wrapper来代替原本会被识别的值类型，
+而reference_wrapper能隐式转换为被引用的值的引用类型，但是并不能被用作 & 类型。
 
-
+	std::ref() 用于包装按引用传递的值
+	std::cref() 用户包装按const引用传递的值
+	std::reference_wrapper()
