@@ -102,4 +102,5 @@ std::ref 和 std::cref 只是尝试模拟引用传递，并不能真正变成引
 
 	std::ref() 用于包装按引用传递的值
 	std::cref() 用户包装按const引用传递的值
-	std::reference_wrapper()
+	std::reference_wrapper() 将引用包装成一个对象，即引用的包装器。可以包裹一个指向对象或者指
+				 向函数指针的引用，既可以通过拷贝构造，也可以通过赋值构造
