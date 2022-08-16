@@ -28,6 +28,12 @@
  * 才会实例化。
  * 12.返回迭代器的解引用类型(对迭代器解引用的得到的是引用);尾置返回,当在编译时不知道返回类型，此时使用尾置返回并使用decltype使编译器知道返回类型;
  * 而使用该接口的用户并不需要定义返回类型，使用auto即可。
+ * 13.类模板特化：
+ *	  模板全特化:指对所有模板参数进行特化
+ *	  模板偏特化：模板偏特化是模板特化的一种特殊情况，指显示指定部分模板参数而非全部模板参数，或者指定模板参数的部分特性分而非全部特性，也称为模板部分特化。
+ *	  		模板偏特化又分为两种情况：
+ *				一种是指对部分模板参数进行全特化
+ *				另一种是对模板参数特性进行特化，包括将模板参数特化为指针、引用或是另外一个模板类
  */
 
 
@@ -174,6 +180,22 @@ template<typename Iter>auto fun2(Iter begin,Iter end)->typename std::remove_refe
 {
 	return *begin;
 }
+
+
+
+//模板偏特化
+//模板偏特化经典应用是标准库的remove_reference系列操作
+  template<typename _Tp>
+    struct remove_reference
+    { typedef _Tp   type; };
+
+  template<typename _Tp>
+    struct remove_reference<_Tp&>
+    { typedef _Tp   type; };
+
+  template<typename _Tp>
+    struct remove_reference<_Tp&&>
+    { typedef _Tp   type; };
 
 
 
