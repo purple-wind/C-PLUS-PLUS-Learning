@@ -4,9 +4,14 @@
 #include<string>
 #include<string.h>
 #include"my_fstream.h"
-// #include <sys/stat.h>
-// #include <fcntl.h>
-// #include <sys/types.h>
+
+/* fstream还有两个子类分别是ifstream和ofstream
+ * 其中ifstream默认以输入方式打开文件，如果文件不存在，则打开失败
+ * ofstream默认以输出方式打开文件,文件不存在,则会创建一个文件
+ */
+
+
+
 // 读写二进制文件需要用read/write根据字节数读写
 void Fstream::rw_binary(const char* filename)
 {
