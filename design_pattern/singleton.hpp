@@ -73,8 +73,8 @@ SingleTon* SingleTon::m_instance = nullptr;
 
 /**
 * @projectName:	SingleTon1
-* @author:	zhouchao
-* @email:	zhouchao@act-telecom.com
+* @author:
+* @email:	
 * @date:	2020-08-05
 * @brief: 内部静态变量的懒汉单例（C++11 线程安全）,代码量最少的方式
 */
@@ -89,10 +89,10 @@ public:
     static SingleTon1* get_instance()
     {
         //局部静态特性的方式实现单实例
-        pthread_mutex_lock(m_mutex);
+        pthread_mutex_lock(&m_mutex);
         static SingleTon1 instance;
         m_instance = &instance;
-        pthread_mutex_unlock(m_mutex);
+        pthread_mutex_unlock(&m_mutex);
         return m_instance;
     }
     
@@ -100,8 +100,6 @@ private:
     //禁止构造
     SingleTon1()
     {
-        m_mutex = new pthread_mutex_t();
-        pthread_mutex_init(m_mutex, 0);
     }
 
     //禁止拷贝构造
@@ -123,10 +121,10 @@ private:
 
 private:
     std::string str = "hello singleton1";
-    static pthread_mutex_t* m_mutex;
+    static pthread_mutex_t m_mutex;
     static SingleTon1* m_instance;
 };
 
-pthread_mutex_t* SingleTon1::m_mutex = nullptr;
+pthread_mutex_t SingleTon1::m_mutex;
 SingleTon1* SingleTon1::m_instance = nullptr;
 #endif // SINGLETON_H
