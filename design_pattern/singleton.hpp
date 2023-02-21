@@ -44,7 +44,6 @@ public:
 private:
   SingleTon()
   {
-    m_mutex = new pthread_mutex_t();
     pthread_mutex_init (m_mutex, 0);
   }
   //该类的唯一作用是用于析构SingleTon唯一对象，用于释放系统资源(例如文件描述符等)  
@@ -65,7 +64,7 @@ private:
   std::string str = "hello singleton";
 };
 
-pthread_mutex_t* SingleTon::m_mutex = nullptr;
+pthread_mutex_t* SingleTon::m_mutex = new pthread_mutex_t();;
 SingleTon* SingleTon::m_instance = nullptr;
 
 
