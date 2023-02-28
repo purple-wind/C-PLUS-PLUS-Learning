@@ -77,7 +77,7 @@ TextQuery::TextQuery ( std::ifstream& is ) :file ( new std::vector<std::string> 
         };
     };
 }
-QueryResult TextQuery::query ( const std::__cxx11::string& sought) const
+QueryResult TextQuery::query ( const std::string& sought) const
 {
   static std::shared_ptr<std::set<line_no>>nodata ( new std::set<line_no> );
   auto loc=wm.find ( sought );

@@ -151,7 +151,7 @@ void enum_union::my_union()
     std::cout<<"this is test union,merber float="<<test.floater<<std::endl;
 
 }
-std::__cxx11::string* enum_union::get_str()
+std::string* enum_union::get_str()
 {
     return str;
 }
