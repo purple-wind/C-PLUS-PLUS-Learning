@@ -208,6 +208,7 @@ public:
     {
         std::cout<<"run fool"<<std::endl;
         std::cout<<"foo1  "<<sizeof... ( arg ) <<std::endl;
+        return t;
     }
     //非模板参数类型参数包格式
     template<int ...N>void foo2()
@@ -256,6 +257,7 @@ public:
     {
         std::cout<<"end="<<t<<std::endl;
         print1_used ( t );
+        return os;
     }
 
     template<typename T,typename ... Type>std::ostream& print1 ( std::ostream& os,const T& t,const Type& ...arg )

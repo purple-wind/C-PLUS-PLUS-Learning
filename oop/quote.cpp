@@ -27,12 +27,12 @@ Quote::Quote ( const Quote& other )
 
 Quote& Quote::operator= ( const Quote& other )
 {
-
+    return *this;
 }
 
 bool Quote::operator== ( const Quote& other ) const
 {
-
+    return true;
 }
 
 std::string Quote::isbn() const
@@ -43,7 +43,7 @@ std::string Quote::isbn() const
 
 double Quote::net_price(size_t price)const
 {
-  
+    return price;
 }
 
 //Bulk_quote
@@ -99,6 +99,7 @@ double Basket::total_receipt ( std::ostream& os ) const
 	{
 		sum+=print_total ( os,**iter,items.count ( *iter ) );
 	}
+    return sum;
 }
 void Basket::add_item ( const std::shared_ptr< Quote >& sale )
 {

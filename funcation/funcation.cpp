@@ -61,10 +61,12 @@ public:
     {
 		a++;
         std::cout<<"static:a="<<a<<"  b="<<b<<" c="<<c<<std::endl;
+        return 0;
     }
   int no_static_number(int a,int b,int c)
   {
 	  std::cout<<"no static:a="<<a<<"  b="<<b<<" c="<<c<<std::endl;
+      return 0;
   }
   void general_number(void)
   {

@@ -53,6 +53,7 @@ public:
 	 std::cout<<"t3 浅拷贝赋值"<<std::endl;
 	 value1=rv.value1;
 	 value2=rv.value2;
+     return *this;
 	}
 };
 

@@ -101,7 +101,7 @@ enum_union& enum_union::operator=(const enum_union& other)
  */
 bool enum_union::operator==(const enum_union& other) const
 {
-
+    return true;
 }
 
 /**
