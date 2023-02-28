@@ -1,22 +1,24 @@
-#include "singleton.hpp"
+#include "singleton1.hpp"
+#include "singleton2.hpp"
+
 int main(int argc,char* argv[])
 {
-    SingleTon* instance0 = SingleTon::get_instance();
+    Singleton0* instance0 = Singleton0::GetInstance();
     std::cout<<"instance0 addr="<<instance0<<std::endl;
-    instance0->work();
+    instance0->Print();
     
-    SingleTon* instance01 = SingleTon::get_instance();
-    std::cout<<"instance01 addr="<<instance01<<std::endl;
-    instance01->work();
-    
-    
-    SingleTon1* instance1 = SingleTon1::get_instance();
+    std::shared_ptr<Singleton1> instance1 = Singleton1::GetInstance();
     std::cout<<"instance1 addr="<<instance1<<std::endl;
-    instance1->work();
+    instance1->Print();
     
-    SingleTon1* instance11 = SingleTon1::get_instance();
-    std::cout<<"instance11 addr="<<instance11<<std::endl;
-    instance11->work();
+    
+    Singleton3* instance3 = Singleton3::GetInstance();
+    std::cout<<"instance1 addr="<<instance3<<std::endl;
+    instance3->Print();
+    
+    Singleton4* instance4 = Singleton4::GetInstance();
+    std::cout<<"instance11 addr="<<instance4<<std::endl;
+    instance4->Print();
 
     return 0;
 }
