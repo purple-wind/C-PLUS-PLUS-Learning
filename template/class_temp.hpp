@@ -185,53 +185,17 @@ template<typename Iter>auto fun2(Iter begin,Iter end)->typename std::remove_refe
 
 //模板偏特化
 //模板偏特化经典应用是标准库的remove_reference系列操作
-  template<typename _Tp>
-    struct remove_reference
-    { typedef _Tp   type; };
+template<typename _Tp>
+  struct remove_reference0
+  { typedef _Tp   type; };
 
-  template<typename _Tp>
-    struct remove_reference<_Tp&>
-    { typedef _Tp   type; };
+template<typename _Tp>
+  struct remove_reference0<_Tp&>
+  { typedef _Tp   type; };
 
-  template<typename _Tp>
-    struct remove_reference<_Tp&&>
-    { typedef _Tp   type; };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+template<typename _Tp>
+  struct remove_reference0<_Tp&&>
+  { typedef _Tp   type; };
 
 #endif
 
