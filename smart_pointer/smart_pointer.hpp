@@ -30,4 +30,18 @@ public:
 };
 
 
+class CircularRef
+{
+    public:
+        ~CircularRef()
+        {
+            std::cout<<"~CircularRef"<<std::endl;
+        }
+
+        std::shared_ptr<CircularRef> ptr;
+        //std::weak_ptr<CircularRef> ptr;
+};
+
+
+
 #endif
