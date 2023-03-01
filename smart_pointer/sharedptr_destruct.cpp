@@ -1,23 +1,10 @@
 /*智能指针析构*/
 
-#include "forward_declaring_shareptr.h"
 #include<iostream>
 #include<vector>
 #include<utility>
-struct X
-{
-        X(int x)
-        {
-            a = x;
-        }
-
-        int a;
-};
-
-xyz::xyz()
-{
-    m_ptr_x = std::make_shared<X>(100);
-}
+#include<memory>
+using namespace std;
 
 struct S0{
         S0(int x)
@@ -25,38 +12,34 @@ struct S0{
             a = x;
         }
 
-        int a;
         ~S0()
         {
             std::cout<<"析构S0"<<std::endl;
         }
+        int a;
 };
 
-using tup = tuple<std::string, shared_ptr<struct S0> >;
-void test_sharedptr(shared_ptr<vector<tup> >& x)
+using Tup = std::tuple<std::string, std::shared_ptr<struct S0> >;
+
+void test_sharedptr(std::shared_ptr<std::vector<Tup> > &x)
 {
     {
-        vector<tup> vec = {tup("123", make_shared<struct S0>(100))};
-        x = make_shared<vector<tup> >(vec);
-        shared_ptr<vector<tup> > temp_ptr = nullptr;
+        vector<Tup> vec = {Tup("123", make_shared<struct S0>(100))};
+        x = make_shared<vector<Tup> >(vec);
+        shared_ptr<vector<Tup> > temp_ptr = nullptr;
         x.swap(temp_ptr);
         std::cout<<"x address="<<x<<std::endl;
     }
     std::cout<<"test_sharedptr end"<<std::endl;
 }
 
-
-int main()
+void wrap_test_sharedptr()
 {
-    xyz x;
-    std::cout<<x.m_ptr_x->a<<std::endl;
-
-
     {
         //智能指针在析构的时候会析构它指向的对象
-        shared_ptr<vector<tup> > x = nullptr;
+        std::shared_ptr<std::vector<Tup> > x = nullptr;
         test_sharedptr(x);
-//        std::cout<<get<0>((*x)[0])<<std::endl;
+        //std::cout<<get<0>((*x)[0])<<std::endl;
         std::cout<<"x address="<<x<<std::endl;
     }
     std::cout<<"after test_sharedptr"<<std::endl;

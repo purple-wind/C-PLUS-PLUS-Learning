@@ -28,10 +28,10 @@
  		std::uninitialized_fill(bp+4,bp+6,"46");
 		std::uninitialized_fill_n(bp+6,4,"79");
  */
-class my_allocator
+class MyAllocator
 {
 public:
-    my_allocator()=default;
+    MyAllocator()=default;
 	void used_allocator();
 };
 

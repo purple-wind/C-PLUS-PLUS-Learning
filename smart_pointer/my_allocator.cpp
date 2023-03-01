@@ -2,7 +2,7 @@
 #include<memory>
 #include<iostream>
 #include<vector>
-void my_allocator::used_allocator()
+void MyAllocator::used_allocator()
 {
     typedef std::allocator<std::string> AS;
     AS a;
