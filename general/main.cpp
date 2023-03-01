@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
-#include "../friend/my_friend.h"
+#include "my_friend.hpp"
 #include "enum_union.h"
 #include "destructor.hpp"
 
