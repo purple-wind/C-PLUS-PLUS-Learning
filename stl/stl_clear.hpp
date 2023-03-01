@@ -164,33 +164,3 @@ void test_set()
    cout<<"after swap"<<std::endl;
    sleep(10);
 }
-
-
-int main(int argc, char *argv[])
-{
-    switch(stoi(argv[1]))
-    {
-        case 0:
-            test_vector();
-            cout<<"after return"<<std::endl;
-            break;
-        case 1:
-            test_list();
-            cout<<"after return"<<std::endl;
-            break;
-        case 2:
-            test_deque();
-            cout<<"after return"<<std::endl;
-            break;
-        case 3:
-            test_map();
-            cout<<"after return"<<std::endl;
-            break;
-        case 4:
-            test_set();
-            cout<<"after return"<<std::endl;
-            break;
-    }
-    sleep(10);
-    return 0;
-}

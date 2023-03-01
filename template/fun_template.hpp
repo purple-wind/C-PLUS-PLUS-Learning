@@ -1,9 +1,9 @@
 #ifndef __FUNCTION_TEMPLATE_H__
 #define __FUNCTION_TEMPLATE_H__
-#include<iostream>
 #include<type_traits>
 #include<utility>
 #include<sstream>
+#include<functional>
 template<typename T>void a ( T );
 /**
  * @brief:函数模板示例演示：
@@ -235,7 +235,7 @@ public:
 //  const Args...rest是包扩展，扩展一个包就是将它分解为构成的元素，通过在模式右边放一个省略号来触发包扩展。
 //  下面的例子中对Args的扩展中，编译器将模式const Arg&应用到模板参数包Args中的每个元素，每个参数类型为const type&
 //  对print的调用中rest的扩展中模式是rest，此模式扩展出一个由包中元素组成的、逗号分割的列表。
-    template<typename T,typename...Args> std::ostream& print ( ostream& os,const T&t ,const Args&...rest )
+    template<typename T,typename...Args> std::ostream& print ( std::ostream& os,const T&t ,const Args&...rest )
     {
         os<<t<<", ";
         return print ( os,rest... );

@@ -10,7 +10,7 @@
 //  2.在某些平台上或者由于编译器选项（例如 GCC 和 Clang 中的 -ftrapv）引发陷阱
 //  3.在某些时候截断到最小或最大值（在许多 DSP 上）
 //  4.完全被编译器优化掉
-int main(int argc, char *argv[])
+int test_arithmetic(void)
 {
     unsigned int  i0 = UINT_MAX;
     unsigned int  i1 = std::numeric_limits<unsigned int>::min();

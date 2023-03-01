@@ -13,7 +13,7 @@ struct FlexibleArray
 
 void test_flexible_array()
 {
-    struct FlexibleArray* a0 = malloc(sizeof(struct FlexibleArray) + 10);
+    struct FlexibleArray* a0 = (struct FlexibleArray*)malloc(sizeof(struct FlexibleArray) + 10);
     printf("FlexibleArray sizeof=%lu\n", sizeof(struct FlexibleArray));
     a0->length = 10;
     a0->data[0] = 'a';
@@ -36,8 +36,3 @@ void test_flexible_array()
 
 }
 
-int main()
-{
-    test_flexible_array();
-    return 0;
-}

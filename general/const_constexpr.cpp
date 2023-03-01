@@ -12,7 +12,8 @@ constexpr long int fib1(int n)
 long int fib2(int n){
         return (n <= 1)? n : fib2(n-1) + fib2(n-2);
 }
-int main ()
+
+int const_constexpr(void)
 {
     // value of res is computed at compile time.
     int a = 30;
