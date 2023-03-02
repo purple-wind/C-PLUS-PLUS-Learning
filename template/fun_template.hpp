@@ -49,6 +49,10 @@ class fun_temp
         //1.从左值引用函数参数推断类型,只能传递给它一个左值或一个返回引用类型的表达式
         template<typename T> void left_refer ( T& left_value ) {
             T a=left_value;
+            std::cout<<"l arg="<<std::is_lvalue_reference<decltype(left_value)>::value<<std::endl;
+            std::cout<<"l T="<<std::is_lvalue_reference<decltype(a)>::value<<std::endl;
+            std::cout<<"l arg="<<std::is_rvalue_reference<decltype(left_value)>::value<<std::endl;
+            std::cout<<"l T="<<std::is_rvalue_reference<decltype(a)>::value<<std::endl;
             a=2;
             std::cout<<"left_value="<<left_value<<std::endl;
         }
@@ -61,9 +65,11 @@ class fun_temp
         //2.从 右值引用函数参数类型推断，推断出的类型是该右值的实参类型
         template<typename T> void right_refer ( T&& right_value ) {
             T b=right_value;
+            std::cout<<"r arg="<<std::is_lvalue_reference<decltype(right_value)>::value<<std::endl;
+            std::cout<<"r T="<<std::is_lvalue_reference<decltype(b)>::value<<std::endl;
             std::cout<<"right value1="<<right_value<<std::endl;
-            b=3;
-            std::cout<<"right value="<<right_value<<std::endl;
+            b += 3;
+            std::cout<<"right value="<< right_value<<std::endl;
         }
 
 
@@ -82,6 +88,7 @@ class fun_temp
         //  用则这些引用会发生折叠，正常情况下引用会折叠成一个普通的左值引用，特别注意折叠是针对函数从实参到形参的转化规则，影响的是
         //  最终形参的类型(而不是模板参数的类型)，此过程中模板类型参数已经推断完毕。
         void infer1() {
+            std::cout<<"------------infer1"<<std::endl;
             int value1=1;
             right_refer ( value1 ); //把左值类型传递给右值类型引用，此时编译器推断的T类型为int&
         }
@@ -97,18 +104,27 @@ class fun_temp
             //      左--右 unvalid
             //      const左--右 模板参数类型为实参类型，不会是const的
             //      右--左 模板类型为实参的左值引用类型
-            int&& refer=1;
-            int value1=1;
-            int& refer1=value1;
 
-            //      left_refer ( refer ); //因为是形参左值引用，所以实参只能是左值，模板类型为实参类型，T类型为int&&
-            //      left_refer ( refer1 ); //因为是形参左值引用，所以实参只能是左值，模板类型为实参类型，T类型为int&
-            // 		left_refer(1);错误
+            std::cout<<"------------infer2"<<std::endl;
+            int value1 = 1;
+            int&& refer = 1;
+            int& refer1 = value1;
 
-            right_refer(value1);//函数形参为右值引用类型且实参是int(左值)，所以模板类型为实参类型的引用,即T=int&;参数形式为int& &&,折叠为int&
-            right_refer ( refer1 ); //函数形参为右值引用类型，实参为int(左值)，所以模板类型为实参类型的引用，即T=int&;参数形式为int& &&,折叠为int&
-            right_refer ( refer ); //函数形参为右值引用类型，且实参为int&&(左值);所以模板类型为实参类型，即T=int&;此时的形参形式为int& &&,折叠为int&
-            right_refer (1); //函数形参为右值引用类型，且实参为int(右值);所以模板类型为实参类型，即T=int;此时的形参形式为int &&,折叠之后还是int&&
+            left_refer(refer); //因为是形参左值引用，所以实参只能是左值，模板类型为实参类型，T类型为int
+            left_refer(refer1); //因为是形参左值引用，所以实参只能是左值，模板类型为实参类型，T类型为int
+            //left_refer(1);错误
+
+            right_refer(value1);//函数形参为右值引用类型且实参是int(左值)，所以模板类型为实参类型的引用,即T=int&;参数形式为int& &&,折叠为int&,
+                                //该函数被实例化为这样void right_refer(int& right_value);
+
+            right_refer(refer1); //函数形参为右值引用类型，实参为int(左值)，所以模板类型为实参类型的引用，即T=int&;参数形式为int& &&,折叠为int&
+                                 //该函数被实例化为这样void right_refer(int& right_value);
+            std::cout<<"infer2 value1=" << value1<<std::endl;
+            right_refer(refer); //函数形参为右值引用类型，且实参为int(左值);所以模板类型为实参类型的引用，即T=int&;此时的形参形式为int& &&,折叠为int&
+                                //该函数被实例化为这样void right_refer(int& right_value);
+
+            right_refer(1); //函数形参为右值引用类型，且实参为int(右值);所以模板类型为实参类型，即T=int;此时的形参形式为int &&,折叠之后还是int&&
+                            //该函数被实例化为这样void right_refer(int&& right_value);
             std::cout<<"value1="<<value1<<std::endl;
         }
 

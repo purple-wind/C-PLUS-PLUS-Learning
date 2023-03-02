@@ -177,7 +177,11 @@ template<typename T> void rvalue(T&& a)
 void test_lrvalue()
 {
     int && a = 10;//右值引用　引用　右值
-    std::cout<<a<<std::endl;
+    std::cout<<"a="<<a<<std::endl;
+    int a1 = a;
+    std::cout<<"a1="<<a1<<std::endl;
+    a1++;
+    std::cout<<"a="<<a<<std::endl;
     int & b = a;//左值引用可以　引用　右值引用类型的变量
     std::cout<<b<<std::endl;
     b+=1;
