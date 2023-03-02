@@ -65,8 +65,13 @@ class fun_temp
         //2.从 右值引用函数参数类型推断，推断出的类型是该右值的实参类型
         template<typename T> void right_refer ( T&& right_value ) {
             T b=right_value;
+            std::cout<<"r arg="<<std::is_reference<decltype(right_value)>::value<<std::endl;
+            std::cout<<"r T="<<std::is_reference<decltype(b)>::value<<std::endl;
             std::cout<<"r arg="<<std::is_lvalue_reference<decltype(right_value)>::value<<std::endl;
             std::cout<<"r T="<<std::is_lvalue_reference<decltype(b)>::value<<std::endl;
+            std::cout<<"r arg="<<std::is_rvalue_reference<decltype(right_value)>::value<<std::endl;
+            std::cout<<"r T="<<std::is_rvalue_reference<decltype(b)>::value<<std::endl;
+
             std::cout<<"right value1="<<right_value<<std::endl;
             b += 3;
             std::cout<<"right value="<< right_value<<std::endl;
