@@ -324,7 +324,14 @@ class VariadicTemplate
         }
 };
 
-// 类型转换模板
+template<typename T, T v> class Tmp{
+public:
+        void Print()
+        {
+            std::cout<<"v="<<v<<std::endl;
+        }
+};
+// 类型萃取
 void test_traits()
 {
     std::remove_reference<int>::type a_=1;//a_为int型
@@ -353,6 +360,21 @@ void test_traits()
     std::remove_extent<int[10]>::type g=1;//g为有十个整型元素的数组的元素类型int
     std::remove_all_extents<int[10][20][30]>::type g1=1;//g1为三位数组的元素类型int
 
+
+    std::conditional<sizeof(int) >= sizeof(double), int, double>::type h0 = 1.1;
+    std::enable_if<std::is_arithmetic<int>::value, double>::type h1 = 'a';
+    std::cout<<"h1="<<h1<<std::endl;
+
+    std::integral_constant<int, 2> h3;
+    std::integral_constant<int, 4> h4;
+    std::cout<<"h3="<< h3<<std::endl;
+    std::cout<<"h4="<< h4<<std::endl;
+
+    Tmp<int, 100> l0;
+    l0.Print();
+
 }
+
+
 
 #endif

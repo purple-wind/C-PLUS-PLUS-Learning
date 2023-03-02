@@ -21,6 +21,7 @@ int main()
         std::cout<<"a2="<<a22<<std::endl;
         a22=200;
         std::cout<<"a1="<<a11<<std::endl;
+        std::cout<<"-------------类型萃取----------------"<<std::endl;
         test_traits();
 
     // 类模板
