@@ -200,6 +200,22 @@ template<typename _Tp>
 
 #endif
 
+template<typename> class IsConst : public std::false_type
+{
+    public:
+    IsConst()
+    {
+        std::cout<<"1"<<std::endl;
+    }
+};
+template<typename _Tp> class IsConst<const _Tp>: public std::true_type
+{
+    public:
+    IsConst()
+    {
+        std::cout<<"2"<<std::endl;
+    }
+};
 
 
 

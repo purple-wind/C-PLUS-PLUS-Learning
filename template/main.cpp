@@ -52,5 +52,21 @@ int main()
       std::cout<<"--------------可变长参数模板-----------"<<std::endl;
       var.test1();
 
+
+      //引用类型经过std::is_const判断始终为false，即非const类型
+      //检查引用的类型的const属性的正确方式是移除引用:is_const<typename remove_reference<T>::type>
+      int a = 0;
+      const int b = a;
+      const int& c = a;
+      const int&& d = static_cast<const int&&>(b);
+      std::cout<<"b="<<IsConst<decltype(b)>::value<<std::endl;
+      std::cout<<"c="<<IsConst<decltype(c)>::value<<std::endl;
+      std::cout<<"d="<<IsConst<decltype(d)>::value<<std::endl;
+      const int & e = a;
+      std::cout<<"e="<<IsConst<std::remove_reference<decltype(e)>::type>::value<<std::endl;
+      IsConst<const int> x;
+      IsConst<const int&>y;
+
+
     return 0;
 }
