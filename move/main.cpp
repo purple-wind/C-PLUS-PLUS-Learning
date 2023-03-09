@@ -237,6 +237,9 @@ int main()
 {
     test_type_diff();
     test_lrvalue();
-    test_return_lrvalue();
+//    test_return_lrvalue();
+    std::cout<<std::is_reference<int(*)[3]>::value<<std::endl;//数组的指针
+    std::cout<<std::is_reference<int(&)[3]>::value<<std::endl;//数组的引用
+    std::cout<<std::is_reference<int&>::value<<std::endl;
     return 0;
 }
