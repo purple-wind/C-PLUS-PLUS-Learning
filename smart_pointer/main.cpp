@@ -36,4 +36,11 @@ int main()
         std::cout<<"ref0 use count="<<ref0.use_count()<<std::endl;
         std::cout<<"ref1 use count="<<ref1.use_count()<<std::endl;
     }
+
+    int *p0 = new int(1000);
+    std::cout<<"p0="<<p0<<std::endl;
+    std::shared_ptr<int>p1(p0);
+    std::cout<<"*ptr="<< *p1<<std::endl;
+    std::cout<<"address="<<p1.get()<<std::endl;
+    return 0;
 }

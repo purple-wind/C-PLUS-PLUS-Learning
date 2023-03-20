@@ -198,9 +198,11 @@ template<typename _Tp>
   struct remove_reference0<_Tp&&>
   { typedef _Tp   type; };
 
+
 #endif
 
-template<typename> class IsConst : public std::false_type
+//标准库std::is_const的实现
+template<typename _Tp> class IsConst : public std::false_type
 {
     public:
     IsConst()
@@ -221,3 +223,48 @@ template<typename _Tp> class IsConst<const _Tp>: public std::true_type
 
 
 
+
+struct Magic0{};
+struct Magic1{};
+class Magic0A
+{
+    public:
+        typedef Magic0 type;
+
+};
+
+class Magic1A
+{
+    public:
+        typedef Magic1 type;
+
+};
+
+template<class T> void Accept(T magic)
+{
+    std::cout<<"Magic general"<<std::endl;
+    Accept(magic, typename T::type());
+    Accept(magic, typename T::type());
+}
+
+//base
+template<class T> void Accept(T magic1, T magic2)
+{
+
+}
+
+//part args is general type
+template<class T> void Accept(T magic1, char mime)
+{
+   //magic1 = extract(mime);
+}
+
+//only give general type
+template<class T> void Accept(T magic, Magic1)
+{
+    std::cout<<"Maigc1"<<std::endl;
+}
+template<class T> void Accept(T magic, Magic0)
+{
+    std::cout<<"Magic0"<<std::endl;
+}

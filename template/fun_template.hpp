@@ -4,6 +4,7 @@
 #include<utility>
 #include<sstream>
 #include<functional>
+#include<iostream>
 template<typename T>void a ( T );
 /**
  * @brief:函数模板示例演示：
@@ -20,6 +21,7 @@ template<typename T>void a ( T );
  * 2.通常不能直接定义一个引用的引用的，但是可以使用类型别名或者模板推断的方式间接定义引用的引用如果我们间接定义一个引用的引
  *用则这些引用会发生折叠，正常情况下引用会折叠成一个普通的左值引用,特别注意折叠是针对函数从实参到形参的转化规则，此过程中模
  * 板类型参数已经推断完毕.
+ * 6.函数模板特化，函数模板只能全特化，不能部分特化。即必须为原函数模板中每个模板参数都提供实参。template<>表示为原函数模板中每个模板参数都提供实参
  */
 class fun_temp
 {
@@ -362,8 +364,13 @@ void test_traits()
     std::remove_pointer<int*>::type e2=2;//e2类型为int
     std::make_signed<unsigned int>::type f=-1;//f类型为有符号数
     std::make_unsigned<int>::type f1=-1;//f1为无符号数，如果赋值为-1则-1为该类型最大的无符号数
-    std::remove_extent<int[10]>::type g=1;//g为有十个整型元素的数组的元素类型int
-    std::remove_all_extents<int[10][20][30]>::type g1=1;//g1为三位数组的元素类型int
+    std::remove_extent<int[10]>::type g=1;//降低数组一个维度,g为有十个整型元素的数组的元素类型int
+    std::remove_all_extents<int[10][20][30]>::type g1=1;//降低数组所有维度，即数据最底层元素类型。g1为三位数组的元素类型int
+    auto g2 = std::rank<int[10][20][30]>::value; //获取数组的维度，g2=3
+    auto g3 = std::extent<int[10][20][30]>::value;//返回数组第一个维度的长度
+    std::cout<<"g2="<<g2<<" g3="<<g3<<std::endl;
+    typeid(std::remove_pointer<int*>::type).name();//int，移除指针的指针属性，一级指针变为普通类型，二级指针变为一级指针。普通类型保持原类型
+
 
 
     std::conditional<sizeof(int) >= sizeof(double), int, double>::type h0 = 1.1;
@@ -378,7 +385,60 @@ void test_traits()
     Tmp<int, 100> l0;
     l0.Print();
 
+    int array0[2][3] = {{0,0,0}, {0,0,0} };
+    int array1[2][3][4] { {
+                            {0,0,0,0},
+                            {0,0,0,0},
+                            {0,0,0,0}}, {
+                                         {0,0,0,0},
+                                         {0,0,0,0},
+                                         {0,0,0,0}}};
+
 }
+
+
+template<typename T1, typename T2, typename T3> T1 sum(T2 first, T3 second)
+{
+    T1 r = first + second;
+    return r;
+}
+
+template<typename T> int sum2(const T &v1, const T &v2)
+{
+    return 0;
+}
+
+template<typename T> auto sum3(T begin, T end)->decltype(*begin+0)
+{
+    std::cout<<"sum3="<<std::is_reference<decltype(*begin)>::value <<std::endl;
+    std::cout<<"sum3="<<std::is_reference<decltype(*begin+0)>::value <<std::endl;
+    std::cout<<"sum3="<<std::is_lvalue_reference<decltype(*begin)>::value <<std::endl;
+    std::cout<<"sum3="<<std::is_lvalue_reference<decltype(*begin+0)>::value <<std::endl;
+    std::cout<<"sum3="<<std::is_rvalue_reference<decltype(*begin)>::value <<std::endl;
+    std::cout<<"sum3="<<std::is_rvalue_reference<decltype(*begin+0)>::value <<std::endl;
+    return *begin;
+}
+
+
+template<typename T> void debug_rep(const T &t)
+{
+    std::cout<<"ref"<<" "<<std::is_const<T>::value << std::is_const<const T&>::value <<std::is_const<decltype(t)>::value<<std::endl;
+}
+
+template<typename T> void debug_rep(const T *t)
+{
+    std::cout<<"pointer"<<std::is_const<T>::value << std::is_const<const T&>::value <<std::is_const<decltype(t)>::value<<std::endl;
+}
+
+//std::string e0;
+//debug_rep(&e0);
+
+//std::string debug_rep(const std::string &t)
+//{
+//    std::cout<<"no template"<<std::endl;
+//    return t;
+//}
+
 
 
 

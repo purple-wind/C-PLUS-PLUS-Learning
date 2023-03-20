@@ -1,5 +1,6 @@
 #include"class_temp.hpp"
 #include"fun_template.hpp"
+#include<vector>
 int main()
 {
     // 函数模板
@@ -58,7 +59,7 @@ int main()
       int a = 0;
       const int b = a;
       const int& c = a;
-      const int&& d = static_cast<const int&&>(b);
+      const int&& d = static_cast<const int&&>(a);
       std::cout<<"b="<<IsConst<decltype(b)>::value<<std::endl;
       std::cout<<"c="<<IsConst<decltype(c)>::value<<std::endl;
       std::cout<<"d="<<IsConst<decltype(d)>::value<<std::endl;
@@ -66,6 +67,94 @@ int main()
       std::cout<<"e="<<IsConst<std::remove_reference<decltype(e)>::type>::value<<std::endl;
       IsConst<const int> x;
       IsConst<const int&>y;
+      IsConst<decltype(b)>z;
+
+
+
+
+
+      Magic0A magic0a;
+      Accept(magic0a);
+      Magic1A magic1a;
+      Accept(magic1a);
+
+
+      std::cout<<sum<double>(1, 2)<<std::endl;//实例化为double sum(int, int);
+      sum<int>(100, 'a');//int sum(int, char)
+      sum<int, int, char>(100, 'a');//int sum(int, char)
+
+      //template<long> int sum2(const long&, const long&)
+      //由于显示指定了实参类型，所以正常的类型转换规则可以被应用，100被转换成long, 'a'被转换成long
+      sum2<long>(100, 'a');
+      //由于显示指定了实参类型，所以正常的类型转换规则可以被应用，'a'被转换成long, 'a'被转换成int
+      sum2<int>('a', 'b');
+
+      std::vector<int> vec;
+      for(int i = 1; i < 5; i++)
+        vec.push_back(i);
+      std::cout<<sum3(vec.begin(), vec.end())<<std::endl;
+
+      std::cout<<"==="<<typeid(std::remove_pointer<int*>::type).name() <<std::endl;
+      std::cout<<"==="<<typeid(int).name() <<std::endl;
+
+      std::string e0;
+      std::cout<<"&ea is string*="<<(typeid(&e0) == typeid(std::string *))<<std::endl;
+      std::cout<<"&ea is const string*="<<(typeid(&e0) == typeid(const std::string *))<<std::endl;
+      std::cout<<"&ea is string* const="<<(typeid(&e0) == typeid(std::string * const))<<std::endl;
+      std::cout<<std::is_const<decltype(&e0)>::value<<std::endl;
+      std::cout<<std::is_reference<decltype(&e0)>::value<<std::endl;
+      std::cout<<std::is_pointer<decltype(&e0)>::value<<std::endl;
+      debug_rep(e0);
+      debug_rep(&e0);
+      std::string *e1 = &e0;
+      debug_rep(e1);
+      std::string * const e2 = &e0;
+      debug_rep(e2);
+      const std::string *e3 = &e0;
+      debug_rep(e3);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    int e4 = 100;
+    const int* e41 = &e4;
+    const int* &e5 = e41;
+//    *e5 = 200;
+    std::cout<<std::is_const<const int* &>::value<<std::endl;
 
 
     return 0;
