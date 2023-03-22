@@ -3,6 +3,7 @@
 #include"sequential_container.hpp"
 #include"tvector.hpp"
 #include"unordered_container.hpp"
+#include"priority_queue.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -47,5 +48,41 @@ int main(int argc, char *argv[])
             break;
     }
     sleep(10);
+
+
+    //    struct gre
+    //    {
+    //            bool operator()(int x, int y)
+    //            {
+    //                std::cout<<"x="<<x<<std::endl;
+    //                std::cout<<"y="<<y<<std::endl;
+
+    //                if(y>x)
+    //                    return true;
+    //                return false;
+
+    //            }
+    //    };
+
+    //    my_priority_queue<int, vector<int>, std::less<vector<int>::value_type> > q;
+    //    std::priority_queue<int, std::deque<int>, std::function<bool(int, int)> > pri_queue([](int x, int y){
+    //                                                                                           if(x < y)
+    //                                                                                               return true;
+    //                                                                                           return false;
+    //                                                                                       });
+
+    //    std::priority_queue<int, std::deque<int>, bool(*)(int, int) > pri_queue([](int x, int y){
+    //                                                                                           if(x < y)
+    //                                                                                               return true;
+    //                                                                                           return false;
+    //                                                                                       });
+        my_priority_queue<int> q;
+        q.push(9);
+        q.push(2);
+        q.push(7);
+        std::cout<<"q[0]"<<q.top()<<std::endl;
+        q.pop();
+        std::cout<<"q[1]"<<q.top()<<std::endl;
+
     return 0;
 }
