@@ -37,6 +37,8 @@ int main ( int argc, char **argv )
     std::cout<<"------------------类型转换---------------------"<<std::endl;
     test_low_align_high();
     test_high_align_low();
+    std::cout<<"------------------柔性数组---------------------"<<std::endl;
+    test_flexible_array();
 
     std::cout<<"------------------友元-----------------------"<<std::endl;
     Base base;
