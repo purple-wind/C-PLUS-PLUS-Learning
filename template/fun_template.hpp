@@ -5,12 +5,54 @@
 #include<sstream>
 #include<functional>
 #include<iostream>
-template<typename T>void a ( T );
+#include<cstring>
+
+void fun0(int v)
+{
+    std::cout<<"fun0="<<v<<std::endl;
+}
+void fun1(int v)
+{
+    std::cout<<"fun1="<<v<<std::endl;
+}
+
+int g_i = 100;
+const int g_ii = 200;
+const int* g_pi = &g_i;
+std::string g_str = "12345";
+
+
+
+void b ( int )
+{
+
+}
+template<typename T> void a ( T q )
+{
+    std::cout<<"编译器推断出模板类型"<<std::endl;
+}
+
+template<typename T> void debug_rep(const T &t)
+{
+    std::cout<<"ref"<<" "<<std::is_const<T>::value << std::is_const<const T&>::value <<std::is_const<decltype(t)>::value<<std::endl;
+}
+
+template<typename T> void debug_rep(const T *t)
+{
+    std::cout<<"pointer"<<std::is_const<T>::value << std::is_const<const T&>::value <<std::is_const<decltype(t)>::value<<std::endl;
+}
+
+
 /**
  * @brief:函数模板示例演示：
  * 1.函数模板定义格式template<typename A,typename B> return_value fun_name(arg1,arg2){}
- * 2.模板参数也可以是非类型的参数，但是非类型模板参数不代表类型，而代表一个常量。且必须是一个常量。
- * 以保证在编译阶段知道值，可以实例化出一个类型。
+ *   其中A、B为类型参数，类型参数可以作为函数返回值类型、函数参数类型、函数内部定义变量的类型。
+ * 2.模板参数也可以是非类型的参数，但是非类型模板参数不代表类型，而代表一个常量，且必须是一个常量。
+ *   以保证在编译阶段知道值，可以实例化出一个类型。两种大的类型可以作为非模板参数的形参:
+ *  1.整型，注意char、short、long、long long都是整型.但是浮点型不可以
+ *  2.对象类型的指针或者左值引用，这里的对象可以是内置类型、也可以是类类型
+ *  绑定到非类型模板参数的整型实参必须是一个常量表达式，绑定到非类型参数的指针或者引用的实参必须具有静态生存期。总结来说
+ *  就是传递给模板非类型参数的实参必须是一个常量表达式。
  * 3.函数模板可以隐式推断，在模板函数调用时如果不显示的指定模板参数，模板函数可以根据传入参数表的
  * 参数类型推断出模板类型。
  * 4.函数指针和实参推断,当使用一个函数模板初始化一个函数指针或为一个函数指针赋值时，编译器使用函数
@@ -26,19 +68,8 @@ template<typename T>void a ( T );
 class fun_temp
 {
     public:
-
-        void used_fun_temp ( void ) {
-            //可以不指定类型，让编译器自动推断
-            int ret=compare ( 100,200 );
-            std::cout<<"fun temp litter figure is:"<<ret<<std::endl;
-            // 显示的指定类型为char
-            ret=compare<char> ( 'a','b' );
-            std::cout<<"fun temp litter letter is:"<<ret<<std::endl;
-            notype<100>();
-        }
-
         // 函数指针和实参推断,当使用一个函数模板初始化一个函数指针或为一个函数指针赋值时，编译器使用函数指针的类型推断模板的实参。
-        void pfun_test ( void ) {
+        void pfun_test() {
             extern void b ( int );
             void ( *p_fun ) ( int );
             p_fun=b;
@@ -80,7 +111,7 @@ class fun_temp
         }
 
 
-        void infer() {
+        void infer0() {
             int value1=1;
             left_refer ( value1 );
             const_left_refer ( value1 );
@@ -122,65 +153,130 @@ class fun_temp
             //left_refer(1);错误
 
             right_refer(value1);//函数形参为右值引用类型且实参是int(左值)，所以模板类型为实参类型的引用,即T=int&;参数形式为int& &&,折叠为int&,
-                                //该函数被实例化为这样void right_refer(int& right_value);
+            //该函数被实例化为这样void right_refer(int& right_value);
 
             right_refer(refer1); //函数形参为右值引用类型，实参为int(左值)，所以模板类型为实参类型的引用，即T=int&;参数形式为int& &&,折叠为int&
-                                 //该函数被实例化为这样void right_refer(int& right_value);
+            //该函数被实例化为这样void right_refer(int& right_value);
             std::cout<<"infer2 value1=" << value1<<std::endl;
             right_refer(refer); //函数形参为右值引用类型，且实参为int(左值);所以模板类型为实参类型的引用，即T=int&;此时的形参形式为int& &&,折叠为int&
-                                //该函数被实例化为这样void right_refer(int& right_value);
+            //该函数被实例化为这样void right_refer(int& right_value);
 
             right_refer(1); //函数形参为右值引用类型，且实参为int(右值);所以模板类型为实参类型，即T=int;此时的形参形式为int &&,折叠之后还是int&&
-                            //该函数被实例化为这样void right_refer(int&& right_value);
+            //该函数被实例化为这样void right_refer(int&& right_value);
             std::cout<<"value1="<<value1<<std::endl;
         }
 
 
 
-        // 	牛叉的std::move()，标准库使用这一特性的经典例子
+        //牛叉的std::move()，标准库使用这一特性的经典例子
         template<typename T> typename std::remove_reference<T>::type&& move ( T&& t ) {
             return static_cast<typename std::remove_reference<T>::type&&> ( t );
         }
 
-    private:
-        // 	定义一个比较两个数大小的模板函数，函数返回类型为T,接收两个参数类型为T的参数
-        // 	当我们调用一个函数模板时，编译器通常会用函数实参来推断模板实参；但是类模板就不会自己推断；
-        template<typename T> T compare ( T a,T b ) {
-            if ( a<b ) {
-                return a;
-            }
-            if ( b<a ) {
-                return b;
-            }
-            return 0;
+        //定义一个比较两个数大小的模板函数，函数返回类型为T,接收两个参数类型为T的参数
+        //当我们调用一个函数模板时，编译器通常会用函数实参来推断模板实参；但是类模板就不会自己推断；
+        //此版本无法处理不能拷贝的类型
+        template<typename T> T compare(const T a, const T b ) {
+            return a < b ? a : b;
+            //或者使用std::less来比较大小
+            //return std::less<T>() ( a,b ) ? a : b;
         }
 
-        //使用std::less来比较大小
-        template<typename T> T compare1 ( T a,T b ) {
-            if ( std::less<T>() ( a,b ) ) {
-                return a;
-            } else {
-                return b;
-            }
-        }
+        //支持处理不能拷贝的类型,但是此函数不能和上面函数同时出现，因为他们具有同样好的匹配对，造成模板无法实例化
+        //template<typename T> T compare(const T& a, const T& b ) {
+        //return a < b ? a : b;
+        ////或者使用std::less来比较大小
+        ////return std::less<T>() ( a,b ) ? a : b;
+        //}
 
         //非类型模板参数，模板的参数不代表类型,而代表一个常量
-        template<int N> void notype() {
-            std::cout<<"非模板类型参数表示一个值 "<<N*100<<std::endl;
+        //模板参数是整型
+        template<const int N> void notype0() {
+            std::cout<<"notype0 N= "<<N<<std::endl;
         }
 
+        //模板参数是整型指针
+        template<const int* N> void notype1()
+        {
+            std::cout<<"notype1 ptr="<<N;
+            std::cout<<" *N="<<*N<<std::endl;
+        }
+
+        //模板参数是函数指针
+        template<void(*pfun)(int)>void notype2()
+        {
+            printf("notype2 fun ptr=%p\n", pfun);
+            pfun(1);
+        }
+
+        //模板参数是类类型指针
+        template<const std::string* S> void notype3()
+        {
+            std::cout<<"notype3 ptr="<<S;
+            std::cout<<" *S="<<*S<<std::endl;
+        }
+
+        //模板参数是类类型左值引用
+        template<const std::string& S> void notype3()
+        {
+            std::cout<<"notype3 ref="<<S;
+            std::cout<<" *S="<<S<<std::endl;
+        }
+
+        //右值引用无法作为非类型模板参数，此处编译无法通过
+        //template<std::string&& S> void notype3()
+        //{
+        //    std::cout<<"notype3 ref="<<S;
+        //    std::cout<<" *S="<<S<<std::endl;
+        //}
+
+        //整型作为模板参数，用来表示数组的长度,由于不能拷贝数组，所以此处用的是数组的引用
+        template<size_t M, size_t N> bool notype4(const char (&p1)[M], const char (&p2)[N])
+        {
+            std::cout<<"notype4 p1="<<p1<<" p2="<<p2<<std::endl;
+            return strcmp(p1, p2);
+        }
+
+
+        void used_fun_temp() {
+            //可以不指定类型，让编译器自动推断
+            int ret=compare ( 100,200 );
+            std::cout<<"fun temp litter figure is:"<<ret<<std::endl;
+            // 显示的指定类型为char
+            ret=compare<char> ( 'a','b' );
+            std::cout<<"fun temp litter letter is:"<<ret<<std::endl;
+
+
+            //非模板参数演示
+            //整型常量可以作为非类型的模板参数.浮点型不可以.注意char、short、long、long long都是整型，都可以作为非类型模板参数
+            notype0<5>();
+
+            //const类型的局部变量是一个常量表达式，在编译期是知道值的
+            const int f = 5;
+            notype0<f>();
+
+            //全局变量的地址可以作为非类型模板参数，因为g_i具有静态生命期，所以对它取地址是一个常量表达式，在编译期知道值
+            notype1<&g_i>();
+            notype1<&g_ii>();
+
+            //局部变量的指针无法编译通过
+            //int scoped_i = 200;
+            //notype1<&scoped_i>();
+
+            //无法编译通过,g_pi是一个指向全局变量的指针变量，不是一个常量表达式。即使把g_pi定义成const int*也不行
+            //notype1<g_pi>();
+
+            //该处可以编译通过。
+            //但是在一个非类的成员函数(普通函数)中定义的局部静态变量作为实参调用notype1格式的模板函数(非类的成员函数)时无法编译通过(不理解)，
+            //按理说s_i是一个静态局部变量，具有静态生存期，对它取地址也应该是一个常量表达式
+            static int s_i = 200;
+            notype1<&s_i>();
+
+            notype2<fun1>();
+            notype3<&g_str>();
+            notype4("hi", "world");
+        }
 };
-
-void b ( int )
-{
-
-}
-template<typename T> void a ( T q )
-{
-    std::cout<<"编译器推断出模板类型"<<std::endl;
-}
-
-
 
 
 /*完美转发，模板的引用折叠实参类型推断的经典使用示例
@@ -331,13 +427,7 @@ class VariadicTemplate
         }
 };
 
-template<typename T, T v> class Tmp{
-public:
-        void Print()
-        {
-            std::cout<<"v="<<v<<std::endl;
-        }
-};
+
 // 类型萃取
 void test_traits()
 {
@@ -382,22 +472,37 @@ void test_traits()
     std::cout<<"h3="<< h3<<std::endl;
     std::cout<<"h4="<< h4<<std::endl;
 
-    Tmp<int, 100> l0;
-    l0.Print();
+    std::cout<<"int* type="<<typeid(std::remove_pointer<int*>::type).name() <<std::endl;
+    std::cout<<"int  type="<<typeid(int).name() <<std::endl;
 
-    int array0[2][3] = {{0,0,0}, {0,0,0} };
-    int array1[2][3][4] { {
-                            {0,0,0,0},
-                            {0,0,0,0},
-                            {0,0,0,0}}, {
-                                         {0,0,0,0},
-                                         {0,0,0,0},
-                                         {0,0,0,0}}};
+
+    std::string i0;
+    std::cout<<"&ea is string*="<<(typeid(&i0) == typeid(std::string *))<<std::endl;
+    std::cout<<"&ea is const string*="<<(typeid(&i0) == typeid(const std::string *))<<std::endl;
+    std::cout<<"&ea is string* const="<<(typeid(&i0) == typeid(std::string * const))<<std::endl;
+    std::cout<<std::is_const<decltype(&i0)>::value<<std::endl;
+    std::cout<<std::is_reference<decltype(&i0)>::value<<std::endl;
+    std::cout<<std::is_pointer<decltype(&i0)>::value<<std::endl;
+    debug_rep(i0);
+    debug_rep(&i0);
+    std::string *i1 = &i0;
+    debug_rep(i1);
+    std::string * const i2 = &i0;
+    debug_rep(i2);
+    const std::string *i3 = &i0;
+    debug_rep(i3);
+
+    int i4 = 100;
+    const int* i41 = &i4;
+    const int* &i5 = i41;
+    //*e5 = 200;
+    std::cout<<std::is_const<const int* &>::value<<std::endl;
+
 
 }
 
 
-template<typename T1, typename T2, typename T3> T1 sum(T2 first, T3 second)
+template<typename T1, typename T2, typename T3> T1 sum1(T2 first, T3 second)
 {
     T1 r = first + second;
     return r;
@@ -408,6 +513,7 @@ template<typename T> int sum2(const T &v1, const T &v2)
     return 0;
 }
 
+//尾置返回迭代器解引用类型
 template<typename T> auto sum3(T begin, T end)->decltype(*begin+0)
 {
     std::cout<<"sum3="<<std::is_reference<decltype(*begin)>::value <<std::endl;
@@ -418,27 +524,6 @@ template<typename T> auto sum3(T begin, T end)->decltype(*begin+0)
     std::cout<<"sum3="<<std::is_rvalue_reference<decltype(*begin+0)>::value <<std::endl;
     return *begin;
 }
-
-
-template<typename T> void debug_rep(const T &t)
-{
-    std::cout<<"ref"<<" "<<std::is_const<T>::value << std::is_const<const T&>::value <<std::is_const<decltype(t)>::value<<std::endl;
-}
-
-template<typename T> void debug_rep(const T *t)
-{
-    std::cout<<"pointer"<<std::is_const<T>::value << std::is_const<const T&>::value <<std::is_const<decltype(t)>::value<<std::endl;
-}
-
-//std::string e0;
-//debug_rep(&e0);
-
-//std::string debug_rep(const std::string &t)
-//{
-//    std::cout<<"no template"<<std::endl;
-//    return t;
-//}
-
 
 
 
