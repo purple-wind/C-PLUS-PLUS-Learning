@@ -76,6 +76,9 @@ int main(int argc, char *argv[])
     //                                                                                               return true;
     //                                                                                           return false;
     //                                                                                       });
+
+        //比较函数接受范围中的两个元素作为参数，并返回可转换为bool的值。
+        //返回的值指示作为第一个参数传递的元素是否被认为小于它定义的特定严格弱顺序中的第二个参数
         my_priority_queue<int> q;
         q.push(9);
         q.push(2);

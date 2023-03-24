@@ -5,6 +5,19 @@
 #include "enum_union.h"
 #include "destructor.hpp"
 
+void test_array_row_column()
+{
+    int array0[2][3] = {{0,0,0}, {0,0,0} };
+    int array1[2][3][4] { {
+                            {0,0,0,0},
+                            {0,0,0,0},
+                            {0,0,0,0}}, {
+                                         {0,0,0,0},
+                                         {0,0,0,0},
+                                         {0,0,0,0}}};
+
+}
+
 
 extern int test_arithmetic(void);
 extern int const_constexpr(void);
@@ -12,7 +25,7 @@ extern void test_flexible_array();
 extern void test_low_align_high();
 extern void test_high_align_low();
 
-int main ( int argc, char **argv )
+int main (int argc, char **argv)
 {
     std::cout<<"---------------内置数组析构-------------------"<<std::endl;
     /*内置数组在出作用域时会自动析构数组内的元素，且从后向前析构*/
@@ -39,6 +52,7 @@ int main ( int argc, char **argv )
     test_high_align_low();
     std::cout<<"------------------柔性数组---------------------"<<std::endl;
     test_flexible_array();
+    test_array_row_column();
 
     std::cout<<"------------------友元-----------------------"<<std::endl;
     Base base;
