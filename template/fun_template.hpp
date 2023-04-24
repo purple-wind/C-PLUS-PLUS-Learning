@@ -52,7 +52,8 @@ template<typename T> void debug_rep(const T *t)
  *  1.整型，注意char、short、long、long long都是整型.但是浮点型不可以
  *  2.对象类型的指针或者左值引用，这里的对象可以是内置类型、也可以是类类型
  *  绑定到非类型模板参数的整型实参必须是一个常量表达式，绑定到非类型参数的指针或者引用的实参必须具有静态生存期。总结来说
- *  就是传递给模板非类型参数的实参必须是一个常量表达式。
+ *  就是传递给模板非类型参数的实参必须是一个常量表达式。查阅网上资料有说到"非类型模板参数可以是指针，但该指针必须指向外部链接对象",
+ *  听起来有一定道理，但是在本人机器实测跟网上资料有不一致的地方。
  * 3.函数模板可以隐式推断，在模板函数调用时如果不显示的指定模板参数，模板函数可以根据传入参数表的
  * 参数类型推断出模板类型。
  * 4.函数指针和实参推断,当使用一个函数模板初始化一个函数指针或为一个函数指针赋值时，编译器使用函数
@@ -69,7 +70,7 @@ class fun_temp
 {
     public:
         // 函数指针和实参推断,当使用一个函数模板初始化一个函数指针或为一个函数指针赋值时，编译器使用函数指针的类型推断模板的实参。
-        void pfun_test() {
+        void infer_pfun() {
             extern void b ( int );
             void ( *p_fun ) ( int );
             p_fun=b;
@@ -189,6 +190,12 @@ class fun_temp
         ////return std::less<T>() ( a,b ) ? a : b;
         //}
 
+        //模板函数的缺省模板参数,缺省模板参数只能放在非缺省模板参数后面
+        //template<typename T, typename F=std::less<T>> T compare(const T a, const T b, F f = F())
+        //{
+        //    return f(a, b) ? a : b;
+        //}
+
         //非类型模板参数，模板的参数不代表类型,而代表一个常量
         //模板参数是整型
         template<const int N> void notype0() {
@@ -271,12 +278,18 @@ class fun_temp
             //按理说s_i是一个静态局部变量，具有静态生存期，对它取地址也应该是一个常量表达式
             static int s_i = 200;
             notype1<&s_i>();
-
+            //函数指针
             notype2<fun1>();
+            //左值引用
             notype3<&g_str>();
+            //数组
             notype4("hi", "world");
         }
 };
+
+////显示实例化compare函数
+//extern template compare(const double a, const double b);
+//template compare(const double a, const double b );
 
 
 /*完美转发，模板的引用折叠实参类型推断的经典使用示例

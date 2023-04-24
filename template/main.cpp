@@ -1,6 +1,8 @@
 #include"class_temp.hpp"
 #include"fun_template.hpp"
 #include<vector>
+extern template class Blob<double>;
+
 //template<int* N> void q123()
 //{
 //    std::cout<<"notype1 ptr="<<N;
@@ -17,7 +19,7 @@ int main()
     std::cout<<"-------------函数模板----------------"<<std::endl;
     fun_temp temp;
     temp.used_fun_temp();
-    temp.pfun_test();
+    temp.infer_pfun();
     temp.infer0();
     temp.infer1();
     temp.infer2();
@@ -51,6 +53,9 @@ int main()
     //会报错，因为成员函数没有被使用使用。
     Blob<int> blob_int;
     blob_int.empty();
+    blob_int.count();
+
+    Blob<double>blob_double;
 
     Tmp<int, 100> l0;
     l0.Print();

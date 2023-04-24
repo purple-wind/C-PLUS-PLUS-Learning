@@ -6,22 +6,24 @@
 #include<vector>
 #include<type_traits>//标准库的类型转换模板头文件
 
-/* 1.类模板名字不是一个类型名，类模板用来实例化类型，而一个实例化的类型总是包含模板实参。
+/* 定义类模板的格式: template<typename T0, typename T1, typename Tn> class XXX_Name{};
+ * 1.类模板名字不是一个类型名，类模板用来实例化类型，而一个实例化的类型总是包含模板实参。
  * 2.编译器不会为类模板推断模板类型，但是会为函数模板推断模板参数类型
  * 3.在类模板的内部如果还需要使用其它的类模板，在实例化其它类模板的时候可以传递类模板的模板类型参数，而不必须传递真实的类型参数。
  * 4.在类模板内部如果使用类模板自己的类型时不需要提供模板实参，直接使用类名即可。
  * 5.类模板的成员函数不会在类模板实例化成类型的时候被实例化，只有在该成员函数被使用的时候才会被实例化。类模板成员函数本身是一个普
  * 通函数，但是类模板的每个实例都有自己版本的成员函数，所以类模板的成员函数具有和类模板相同的模板参数。因而定义在类模板之外的成员
- * 函数必须以template开始，后接类模板参数表。
+ * 函数必须以template开始，后接类模板参数表。类模板的成员函数不能是虚函数
  * 6.类模板和友元，如果某一个类模板包含一个友元声明，如果该友元是一个非模板友元则该友元和该类的所有实例具有友元关系,即该友元被授权
  * 可以访问该模板类的所有实例;如果友元本身也是一个模板，则类模板可以授权给所有友元模板的实例，也可以只授权给特定的友元模板实例。
  * 7.类模板别名，c++11之后的标准允许为类模板定义一个类型别名，以Class_temp为例格式如下template<typename T> using alias=Class_temp<T1,T2,T3>;
  * 8.实例化后的类模板别名定义和普通别名定义一样 typedef Class_temp<T1,T2,T3> Alias;
- * 9.类模板的静态成员，每个实例化的类模板拥有它对应的静态成员和静态成员函数，每个实例化的类模板的对象共用一个静态成员和静态成员函数。
+ * 9.类模板的静态成员，每个实例化的类模板拥有它对应的静态成员和静态成员函数，每个实例化的类模板的对象共用一个静态成员和静态成员函数。和其它成员函数类似，静态
+ *   成员函数只有在使用时才会实例化。
  * 10.使用类模板的类型成员必须在前面加typename关键字
  * 11.显示实例化：
  * 当在多个文件中实例化相同的类模板(模板参数相同)时，会在多个文件中分别单独进行一份实例化，而它们实例化出来的类型都是一样的，这在较大型的
- * 系统中开销是比较大的。新标准使用显示实例化来解决这个问题。解决办法和全局变量的方法一样，即一处定义，多出声明。格式如下：
+ * 系统中开销是比较大的。新标准使用显示实例化来解决这个问题。解决办法和全局变量的方法一样，即一处定义，多处声明。格式如下：
  * extern template declaration;//实例化声明
  * template declaration;//实例化定义
  * 在实例化定义的时候和普通实例化不同，实例化定义的时候会实例化类的所有成员，包括成员函数。而在普通实例化过程中成员函数只会在成员函数被使用时
@@ -34,6 +36,7 @@
  *	  		模板偏特化又分为两种情况：
  *				一种是指对部分模板参数进行全特化
  *				另一种是对模板参数特性进行特化，包括将模板参数特化为指针、引用或是另外一个模板类
+ *14.类的缺省模板参数，类模板也可以制定缺省模板实参，当我们为类模板所有模板参数指定了缺省参数，当我们想以缺省参数实例化模板类时，需要在类名后跟一对空括号。
  */
 
 
@@ -121,7 +124,7 @@ public:
 	
 	typedef T value_type;
 	typedef typename std::vector<T>::size_type size_type;//使用typename的目的是告诉size_type是一个类型而不是一个静态成员
-	Blob():data(std::make_shared<std::vector<T>>()){
+    Blob():data(std::make_shared<std::vector<T>>()){
 		
 	}
 	Blob(std::initializer_list<T>il);
@@ -132,9 +135,11 @@ public:
 	void pop_back();
 	T& back();
 	T& operator[](size_type i);
+    static size_t count(){return ctr;}
 private:
 	std::shared_ptr<std::vector<T>>data;
 	void check(size_type i,const std::string& msg)const;
+    static size_t ctr;
 };
 
 //类模板成员函数本身是一个普通函数，但是类模板的每个实例都有自己版本的成员函数，所以类模板的成员函数具有和类模板相同的模板参数。因而
@@ -161,6 +166,12 @@ template<typename T> T& Blob<T>::operator[](size_type i)
 template<typename T> Blob<T>::Blob(std::initializer_list<T>il):data(std::make_shared<std::vector<T>>(il)){
 }
 
+template<typename T> size_t Blob<T>::ctr = 0;
+
+
+//显示实例化Blob的一个类
+//extern template class Blob<double>;
+template class Blob<double>;
 
 /*
  *
@@ -268,3 +279,15 @@ template<class T> void Accept(T magic, Magic0)
 {
     std::cout<<"Magic0"<<std::endl;
 }
+
+//类的偏特化,第二个模板参数本质上是一个非类型模板参数，
+//只是这个参数的类型是类型模板参数(即此处的第一个模板参数)，
+//所以第二个参数需要满足非类型模板参数的一切限制。
+template<typename T, T v> class Tmp{
+public:
+        void Print()
+        {
+            std::cout<<"v="<<v<<std::endl;
+        }
+};
+
