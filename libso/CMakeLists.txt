@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.6)
+project(libso)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -O0 -fno-elide-constructors")
+add_library(a SHARED a.cpp c.cpp)
+add_library(b SHARED b.cpp c.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} a b)
