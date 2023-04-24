@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     used1();
     used2();
     used3();
+    used4();
 
 
     switch(stoi(argv[1]))

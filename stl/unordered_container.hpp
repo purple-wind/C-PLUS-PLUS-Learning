@@ -155,6 +155,38 @@ void used3()
   }
 }
 
+
+struct Value{
+    public:
+        explicit Value()
+        {
+            std::cout<<"Value constructor1"<<std::endl;
+        }
+        Value(int y):x(y)
+        {
+            std::cout<<"Value constructor2"<<std::endl;
+        }
+        friend std::ostream& operator<<(std::ostream& a, const Value& v);
+        int x = 1;
+};
+
+std::ostream& operator<<(std::ostream& a, const Value& v)
+{
+    a<<v.x;
+    return a;
+}
+
+void used4()
+{
+    std::map<int, Value> m_map;
+    m_map[0] = Value(20);
+    std::cout<<"--------------"<<std::endl;
+    m_map[1];
+    for(auto& item:m_map)
+    {
+        std::cout<<item.first<<":"<<item.second<<std::endl;
+    }
+}
 #endif //RECORD_C_FUNCTION
 
 
