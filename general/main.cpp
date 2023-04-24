@@ -25,8 +25,13 @@ extern void test_flexible_array();
 extern void test_low_align_high();
 extern void test_high_align_low();
 
+#include<utility>
+#include<memory>
+#include<vector>
 int main (int argc, char **argv)
 {
+    extern void test_realloc();
+    test_realloc();
     std::cout<<"---------------内置数组析构-------------------"<<std::endl;
     /*内置数组在出作用域时会自动析构数组内的元素，且从后向前析构*/
     {
