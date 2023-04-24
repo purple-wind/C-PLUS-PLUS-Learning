@@ -9,4 +9,5 @@ libb.so: b.cpp c.cpp
 	g++ -shared -fPIC b.cpp c.cpp -o libb.so
 clean:
 	rm -rf lib*.so a.out
-
+onlyone:a.cpp b.cpp c.cpp main.cpp
+	g++ a.cpp b.cpp c.cpp main.cpp
