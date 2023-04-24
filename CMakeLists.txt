@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(test_cplus)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g  ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -O0")
 
 add_subdirectory(algorithm)
 add_subdirectory(boost)
@@ -15,3 +15,5 @@ add_subdirectory(stl)
 add_subdirectory(stream)
 add_subdirectory(template)
 add_subdirectory(throw_try_catch)
+add_subdirectory(dpdk)
+add_subdirectory(libso)
