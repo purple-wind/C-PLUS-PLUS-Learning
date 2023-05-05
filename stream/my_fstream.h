@@ -2,10 +2,15 @@
 #define __MY_FSTREAM_H__
 #include<iostream>
 class Fstream{
-public:
-  void rw_binary(const char*);
-  void test_getline(void);
-  static void c_file();
+    public:
+        void rw_binary(const char*);
+        void test_getline(void);
+        static void c_file();
+};
+
+class Stream{
+    public:
+        int stream_iter();
 };
 
 #endif
