@@ -96,35 +96,3 @@ void Fstream::c_file()
     std::cout<<"cmd="<<cmd<<std::endl;
     system(cmd.c_str());
 }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-//ostream_iterator介绍
-#include<vector>
-#include<iostream>
-#include<sstream>
-#include<algorithm>
-#include<iterator>
-#include<numeric>
-int Stream::stream_iter()
-{
-    std::vector<int> myvector;
-    for (int i=1; i<10; ++i)
-        myvector.emplace_back(i*10);
-    std::copy(myvector.begin(), myvector.end(), std::ostream_iterator<int>(std::cout, ", "));
-    std::cout<<std::endl;
-
-    std::istringstream str0("0.1 0.2 0.3 0.4");
-    std::partial_sum(std::istream_iterator<double>(str0),
-                     std::istream_iterator<double>(),
-                     std::ostream_iterator<double>(std::cout, " "));
-    std::cout<<std::endl;
-
-    //ostreambuf_iterator只能应用于char
-    std::string str1 = "This is an example\n";
-    std::copy(str1.begin(), str1.end(), std::ostreambuf_iterator<char>(std::cout));
-
-    std::cout<<std::endl;
-
-    return 0;
-}

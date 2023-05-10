@@ -7,9 +7,6 @@ int main()
     test_fstream.rw_binary ( "test.txt" );
     test_fstream.test_getline();
     Fstream::c_file();
-    std::cout<<"---------------流迭代器--------------------"<<std::endl;
-    Stream s;
-    s.stream_iter();
 
     return 0;
 }

@@ -7,10 +7,4 @@ class Fstream{
         void test_getline(void);
         static void c_file();
 };
-
-class Stream{
-    public:
-        int stream_iter();
-};
-
 #endif
