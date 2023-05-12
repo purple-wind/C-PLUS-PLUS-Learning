@@ -11,19 +11,46 @@
 #include<numeric>
 #include<fstream>
 #include<sstream>
-//迭代器适配器，迭代器适配器有以下几种:
-//1.插入迭代器，插入迭代器又有inserter、back_inserter、front_inserter
-//2.流迭代器，流迭代器又有istream_iterator/istreambuf_iterator、ostream_iterator/ostreambuf_iterator
-//  2.1流迭代器可以关联到标准输入输出(cin cout),也可以关联到文件
-//  2.2流迭代器一般用于算法的参数，可以把容器和流关联上，比如把容器中的内容写入文件，也可以把文件内容直接读取到容器中(限制较多)，比如把文件
-//     内容写入vector<int>型的容器中，则文件中只能是数字字符串，遇到非数字字符即结束。只有流缓冲迭代器才可以原封不动的把文件内容获取到，但是
-//     流缓冲迭代器只能操作字符型（也算一个限制吧）。
-//  2.3流迭代器也支持前后++ 解引用 等于或者不等于操作，且其行为和普通迭代器一直
-//  注意：
-//       1.流缓冲迭代器和流迭代器的区别是流缓冲迭代器会把输入的内容原样保持，但是流迭代器会忽略输入内容中的空格和换行符
-//       2.流缓冲迭代器无法指定非字符型的模板参数，例如整型.因为缓冲迭代器只是将元素以字符的形式写入到流缓冲区，而不会进行任何类型的转换
-//       3.流迭代器中有一个特殊迭代器是尾后迭代器，被定义为空的流迭代器。相当于容器的end迭代器。当流迭代器关联的流遇到文件结尾或者IO错误时，迭代器
-//         的值就等于尾后迭代器。
+/**
+ 迭代器
+    存在一组概念上相关类型，我们认定某个类型是迭代器类型，当且仅当它支持一套操作，这套操作使得我们可以访问容器的元素或者从一个元素移动到另外
+    一个元素。从这个意义上讲指针也是迭代器
+
+    类似容器，迭代器也定义了一组公共操作。一些操作所有迭代器都支持，另外一些操作只有特定类别才支持。例如流迭代器只支持递增、解引用和赋值。
+    但是vector string deque的迭代器除了支持递增、解引用和赋值，还支持递减、关系运算、算术运算。
+
+    1.容器的迭代器：每种容器都对应了自己的迭代器，每种容器迭代器支持的能力不一样，行为大致相同。
+
+    2.流迭代器:流迭代器又有istream_iterator/istreambuf_iterator、ostream_iterator/ostreambuf_iterator
+      2.1流迭代器可以关联到标准输入输出(cin cout),也可以关联到文件
+      2.2流迭代器一般用于算法的参数，可以把容器和流关联上，比如把容器中的内容写入文件，也可以把文件内容直接读取到容器中(限制较多)，比如把文件
+         内容写入vector<int>型的容器中，则文件中只能是数字字符串，遇到非数字字符即结束。只有流缓冲迭代器才可以原封不动的把文件内容获取到，但是
+         流缓冲迭代器只能操作字符型（也算一个限制吧）。
+      2.3输入流迭代器也支持前后++ 解引用 等于或者不等于操作，且其行为和普通迭代器一致。但是输出迭代器的前后++ 解引用实际上不对迭代器做任何操作，
+         只是返回迭代器本身。把内容写到输出流迭代器只需要一直给流迭代器赋值即可
+      2.4
+      注意：
+           1.流缓冲迭代器和流迭代器的区别是流缓冲迭代器会把输入的内容原样保持，但是流迭代器会忽略输入内容中的空格和换行符
+           2.流缓冲迭代器无法指定非字符型的模板参数，例如整型.因为缓冲迭代器只是将元素以字符的形式写入到流缓冲区，而不会进行任何类型的转换
+           3.流迭代器中有一个特殊迭代器是尾后迭代器，被定义为空的流迭代器。相当于容器的end迭代器。当流迭代器关联的流遇到文件结尾或者IO错误时，迭代器
+             的值就等于尾后迭代器。
+
+    3.迭代器适配器:迭代器适配器有插入迭代器，插入迭代器又有inserter、back_inserter、front_inserter
+
+    按照泛型算法的概念来讲，任何标准库算法的最基本特性是它要求其迭代器提供哪些操作。标准库指明了泛型算法的每个迭代器参数的最小类别。
+    根据泛型算法要求的最小类别，迭代器又可以大致可分为5类。如下5类迭代器形成了一种层次，高层次迭代器支持低层次迭代器所有操作。
+        1.输入迭代器:只读不写，单遍扫瞄，只能递增。输入迭代器只用于顺序访问。对于一个输入迭代器，*it++保证是有效的，但递增它
+          可能导致所有其他指向流的迭代器失效。其结果就是不能保证输入迭代器的状态可以保存下来并用来访问元素，因此输入迭代器只能用于单遍扫描。算法要求必须支持
+          == != 前后++ * ->操作
+        2.输出迭代器:只写不读，单遍扫瞄，只能递增。可以看作是输入迭代器功能上的补集，只写而不读元素。我们只能向一个输出迭代器赋值一次。输出迭代器
+          只能用于单遍扫瞄。算法要求必须支持推进迭代器前进的前后++, 赋值操作。
+        3.前向迭代器:可读写，多遍扫描，只能递增。只能在序列中沿一个方向移动。支持所有输入输出迭代器的操作且可以多次读写同一个元素。
+        4.双向迭代器：可读写，多遍扫描，可递增递减。支持正向/反向读写序列中的元素。支持所有前向迭代器的操作外还支持前置后置--
+        5.随即访问迭代器：可读写，多遍扫描，支持全部迭代器运算。除支持双向迭代器所有功能外还支持< <= > >= + += - -= 两个迭代器相减 下标运算
+       注意：容器的迭代器、流迭代器满足上面5中迭代器类型中的一种或者多种。比如vector的迭代器满足5中迭代器中的任意一种
+
+
+ */
 class IteratorTest
 {
     public:
@@ -166,7 +193,7 @@ class IteratorTest
             }
             ifs2.close();
 
-            std::cout<<"------istreambuf iterator---关联到string------"<<std::endl;
+            std::cout<<"---------istreambuf iterator---关联到string---------"<<std::endl;
             std::istringstream iss0("hello world\n");
             std::istreambuf_iterator<char>isbuf_iter2(iss0), eof_iter4;
             std::ostreambuf_iterator<char>osbuf_iter0(std::cout);
@@ -175,25 +202,26 @@ class IteratorTest
 
         void test_os_iterator()
         {
-            std::cout<<"---------ostream iterator---------"<<std::endl;
+            std::cout<<"-----------ostream iterator绑定cout,作为copy算法的输出--------"<<std::endl;
             std::vector<int> vec2;
             for (int i=1; i<10; ++i)
                 vec2.emplace_back(i*1000);
             std::copy(vec2.begin(), vec2.end(), std::ostream_iterator<int>(std::cout, ", "));
             std::cout<<std::endl;
 
-
+            std::cout<<"---------ostreambuf iterator绑定cout,作为copy算法的输出-------"<<std::endl;
             //ostreambuf_iterator的模板参数只能是字符型，例如char u_char wchar_t char16_t char32_t等
             std::string str1 = "This is an example\n";
             std::copy(str1.begin(), str1.end(), std::ostreambuf_iterator<char>(std::cout));
             std::cout<<std::endl;
 
+            std::cout<<"---------ostreambuf iterator绑定文件,作为copy算法的输出-------"<<std::endl;
             std::ofstream of0("./test2.txt");
             std::ostreambuf_iterator<char>os0_iter(of0);
             //std::ostreambuf_iterator<int>os1_iter(x);此句报错
             std::copy(vec2.begin(), vec2.end(), os0_iter);//此处把整型数据按字节写入文件,可能存在问题
 
-            std::cout<<"---------iostream iterator mix---------"<<std::endl;
+            std::cout<<"-------iostream iterator混合使用,分别作为算法的输入和输出-------"<<std::endl;
             std::istringstream str0("0.1 0.2 0.3 0.4");
             std::partial_sum(std::istream_iterator<double>(str0),
                              std::istream_iterator<double>(),
@@ -210,7 +238,35 @@ class IteratorTest
         //反向迭代器
         void test_reverse()
         {
+            std::cout<<"-----------反向迭代器--------"<<std::endl;
+            std::vector<int> vec0{1,2,3,4,5,6,2,8,9};
+            auto find_iter = find(vec0.crbegin(), vec0.crend(), 2);
+            std::cout<<"find="<<*find_iter<<std::endl;//从后向前找到的是6后面的2
+            std::cout<<"find="<<*(++find_iter)<<std::endl;//迭代器++后指向6，说明是6后面的2而不是1后面的2
+            auto gen_iter = find_iter.base();//反向迭代器转换成正向迭代器，此时gen_iter还是指向6后面那个2
+            std::cout<<"正向find="<<*gen_iter<<std::endl;
+            std::cout<<"正向find="<<*(++gen_iter)<<std::endl;//正向迭代器递增后指向的是8，说明正向迭代器指向的是6后面那个2而不是1后面的2
+        }
 
+        void vec_iterator_as_out_interator()
+        {
+            std::cout<<"-----------vector的迭代器做输出迭代器--------"<<std::endl;
+            std::vector<int> vec0{1,2,3,4,5,6,2,8,9};
+            std::vector<int> vec1(10);
+            std::copy(vec0.begin(), vec0.end(), vec1.begin());//必须自己保证vec1有足够的空间容纳vec0的所有元素,若容量不足引发内存问题
+            for(auto& item : vec1)
+            {
+                std::cout<<"value0="<<item<<std::endl;
+            }
+
+            std::cout<<"-----------vector关联的插入迭代器做输出迭代器--------"<<std::endl;
+            std::vector<int> vec2;
+            auto bk_iter = std::back_inserter(vec2);
+            std::copy(vec0.begin(), vec0.end(), bk_iter);
+            for(auto& item : vec2)
+            {
+                std::cout<<"value1="<<item<<std::endl;
+            }
         }
 
 };
@@ -230,5 +286,7 @@ int main()
     IteratorTest iter0;
     iter0.test_inserter();
     iter0.test_ios_iter();
+    iter0.test_reverse();
+    iter0.vec_iterator_as_out_interator();
     return 0;
 }
