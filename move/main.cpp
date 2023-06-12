@@ -10,7 +10,6 @@ template<typename T> typename std::remove_reference<T>::type&& my_move ( T&& t )
     return static_cast<typename std::remove_reference<T>::type&&> ( t );//将一个左值转换成一个右值引用，此时左值被截断。
 }
 
-
 class E
 {
     public:
@@ -206,22 +205,22 @@ void test_lrvalue()
     int r0 = 1;
     int& r1 = r0;
     r1 = 200;
-    cout<<"r0="<<r0<<" r1="<<r1<<endl;
+    cout<<"r0="<<r0<<" r1="<<r1<<endl;//r0=200 r1=200
 
     int&& r2 = 2;
     r2 = 3;
-    std::cout<<"r2="<<r2<<endl;
+    std::cout<<"r2="<<r2<<endl;//r2=3;
 
     int && r3 = move(r0);
     //int&& r3 = static_cast<int&&>(r0);
     //int && r3 = move(0);
-    cout<<"r3="<<r3<<" r0="<<r0<<endl;
+    cout<<"r3="<<r3<<" r0="<<r0<<endl;//r3=200 r0=200
     r3 = 300;
-    cout<<"r3="<<r3<<" r0="<<r1<<endl;
+    cout<<"r3="<<r3<<" r0="<<r0<<endl;//r3=300 r0=300
     int & r7 = r3;
-    cout<<"r7="<<r7<<" r3="<<r3<<" r0="<<r0<<endl;
+    cout<<"r7="<<r7<<" r3="<<r3<<" r0="<<r0<<endl;//r7=300 r3=300 r0=300
     r7 = 400;
-    cout<<"r7="<<r7<<" r3="<<r3<<" r0="<<r0<<endl;
+    cout<<"r7="<<r7<<" r3="<<r3<<" r0="<<r0<<endl;//r7=400 r3=400 r0=400
 
     lvalue(r0);
     lvalue(r1);
