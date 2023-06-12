@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "sort.h"
-//O(n) O(n^2) O(n^2) O(1) 稳定
+//O(n) O(n^2) O(n^2) 稳定 O(1)
 void bubble_sort ( int array[],int length )
 {
     printf ( "%s\n",__FUNCTION__ );
@@ -21,7 +21,7 @@ void bubble_sort ( int array[],int length )
     }
 }
 
-//O(n^2) O(n^2) O(n^2) O(1) 不稳定
+//O(n^2) O(n^2) O(n^2) 不稳定
 void selection_sort ( int array[], int length )
 {
     for ( int i = 0; i <length; i++ ) {
@@ -39,7 +39,7 @@ void selection_sort ( int array[], int length )
     }
 }
 
-//O(n) O(n^2) O(n^2) O(1) 稳定
+//O(n) O(n^2) O(n^2) 稳定
 void insert_sort ( int array[], int length )
 {
     for ( int i = 0; i < length; i++ ) {
@@ -59,7 +59,7 @@ void insert_sort ( int array[], int length )
     }
 }
 
-
+//O(nlogn) O(nlogn) O(N^) 不稳定
 void quick_sort ( int array[], int left, int right )
 {
     if ( left > right ) {
@@ -100,7 +100,7 @@ void quick_sort ( int array[], int left, int right )
 }
 
 
-
+//O(nlogn) O(nlogn) O(n^2) 不稳定
 void quick_sort2 ( int *a, int left, int right )
 {
     if ( left >= right ) { /*如果左边索引大于或者等于右边的索引就代表已经整理完成一个组了*/
@@ -136,5 +136,5 @@ void quick_sort2 ( int *a, int left, int right )
     a[i] = key;/*当在当组内找完一遍以后就把中间数key回归*/
     quick_sort2 ( a, left, i - 1 ); /*最后用同样的方式对分出来的左边的小组进行同上的做法*/
     quick_sort2 ( a, i + 1, right ); /*用同样的方式对分出来的右边的小组进行同上的做法*/
-    /*当然最后可能会出现很多分左右，直到每一组的i = j 为止*/
+    /*当然最后可能会出现很多份左右，直到每一组的i = j 为止*/
 }
