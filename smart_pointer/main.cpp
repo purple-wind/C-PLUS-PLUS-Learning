@@ -3,6 +3,7 @@
 #include"smart_pointer.hpp"
 #include"my_allocator.h"
 #include"forward_declaring_shareptr.h"
+#include"safe_thread_ptr.hpp"
 
 extern void wrap_test_sharedptr();
 
@@ -42,5 +43,12 @@ int main()
     std::shared_ptr<int>p1(p0);
     std::cout<<"*ptr="<< *p1<<std::endl;
     std::cout<<"address="<<p1.get()<<std::endl;
+
+
+
+    test_safe_thread0();
+//    test_safe_thread1();
+    test_safe_thread2();
+
     return 0;
 }
