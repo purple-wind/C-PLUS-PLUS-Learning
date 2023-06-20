@@ -59,6 +59,22 @@ int main()
 
     Tmp<int, 100> l0;
     l0.Print();
+    Tmp1<int> l1;
+    l1.Print();
+    Tmp1<int, double>l2;
+    l2.Print();
+    Tmp2<int>l3;
+    l3.Print();
+    Tmp3<> l4;//Tmp3的所有模板参数都有默认值，此时定义该类型的对象时需要加空的尖括号<>
+    l4.Print();
+    Tmp4<int, char> l5;
+    l5.Print();
+    Tmp4<char, double> l6;
+    l6.Print();
+    Tmp4<double, char> l7;
+    l7.Print();
+    Tmp4<char, int> l8;
+    l8.Print();
 
 
     //引用类型经过std::is_const判断始终为false，即非const类型

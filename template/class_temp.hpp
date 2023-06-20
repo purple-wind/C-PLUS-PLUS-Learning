@@ -264,13 +264,13 @@ template<class T> void Accept(T magic1, T magic2)
 
 }
 
-//part args is general type
+//部分参数是通用类型
 template<class T> void Accept(T magic1, char mime)
 {
    //magic1 = extract(mime);
 }
 
-//only give general type
+//只有通用类型参数
 template<class T> void Accept(T magic, Magic1)
 {
     std::cout<<"Maigc1"<<std::endl;
@@ -290,4 +290,72 @@ public:
             std::cout<<"v="<<v<<std::endl;
         }
 };
+
+//默认模板参数
+template<typename T, typename X= int> class Tmp1{
+    public:
+        void Print()
+        {
+            std::cout<<"-------------"<<std::is_const<T>::value<<std::endl;
+            std::cout<<"is int="<<(typeid(X) == typeid(int))<<std::endl;
+        }
+
+};
+
+//默认模板参数
+template<typename T, typename = int> class Tmp2{
+    public:
+        void Print()
+        {
+            std::cout<<"-------------"<<std::is_const<T>::value<<std::endl;
+        }
+
+};
+
+//所有模板参数都有默认值，此时定义该类型的对象时需要加空的尖括号<>
+template<typename T = int> class Tmp3{
+    public:
+        void Print()
+        {
+            std::cout<<"-------------is int"<<(typeid(T) == typeid(int))<<std::endl;
+        }
+};
+
+
+//接受两个模板参数的基础版本
+template<typename A, typename B > class Tmp4{
+    public:
+        void Print()
+        {
+            std::cout<<"-------基础版本------is int "<<(typeid(A) == typeid(int))<<std::endl;
+        }
+};
+
+//第二个参数是double类型的偏特化版本
+template<typename A > class Tmp4<A, double>{
+    public:
+        void Print()
+        {
+            std::cout<<"-------偏特化版本1，特化部分参数------is int "<<(typeid(A) == typeid(int))<<std::endl;
+        }
+};
+
+//第一个参数是double类型的偏特化版本
+template<typename A > class Tmp4<double, A>{
+    public:
+        void Print()
+        {
+            std::cout<<"-------偏特化版本2，特化部分参数------is int "<<(typeid(A) == typeid(int))<<std::endl;
+        }
+};
+
+//char,int类型的全特化版本
+template<>class Tmp4<char, int>{
+    public:
+        void Print()
+        {
+            std::cout<<"-------全特化版本，特化部分参数------is int "<<std::endl;
+        }
+};
+
 
