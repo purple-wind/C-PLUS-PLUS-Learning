@@ -517,14 +517,42 @@ void test_traits()
 
 template<typename T1, typename T2, typename T3> T1 sum1(T2 first, T3 second)
 {
+    std::cout<<"sum1基础版本"<<std::endl;
     T1 r = first + second;
     return r;
 }
+
+template<typename T1>T1 sum1(int first, int second)
+{
+    std::cout<<"sum1部分特化版本1"<<std::endl;
+    return first + second;
+}
+
+template<typename T1> T1 sum1(char first, char second)
+{
+    std::cout<<"sum1部分特化版本2"<<std::endl;
+    return first + second;
+}
+
+template<typename T1> T1 sum1(int first, char second)
+{
+    std::cout<<"sum1部分特化版本3"<<std::endl;
+    return first + second;
+}
+
+template<> int sum1(int first, int second)
+{
+    std::cout<<"sum1全特化版本"<<std::endl;
+    return first + second;
+}
+
+
 
 template<typename T> int sum2(const T &v1, const T &v2)
 {
     return 0;
 }
+
 
 //尾置返回迭代器解引用类型
 template<typename T> auto sum3(T begin, T end)->decltype(*begin+0)
@@ -537,6 +565,99 @@ template<typename T> auto sum3(T begin, T end)->decltype(*begin+0)
     std::cout<<"sum3="<<std::is_rvalue_reference<decltype(*begin+0)>::value <<std::endl;
     return *begin;
 }
+
+
+
+template<typename A> A Max(A x, A y)
+{
+    std::cout<<"Max 基础版本"<<std::endl;
+    return x > y ? x:y;
+}
+
+template<>int Max(int x, int y)
+{
+    std::cout<<"Max 特化版本1"<<std::endl;
+    return x > y ? x:y;
+}
+
+template<typename A>int Max(unsigned int x, A y)
+{
+    std::cout<<"Max 特化版本2"<<std::endl;
+    return x > y ? x:y;
+}
+
+template<> char Max<char>(char x, char y)
+{
+    std::cout<<"Max 特化版本3"<<std::endl;
+    return x > y ? x:y;
+}
+
+
+
+// 返回迭代器的解引用类型(对迭代器解引用的得到的是引用);尾置返回,当在编译时不知道返回类型，
+// 此时使用尾置返回并使用decltype使编译器知道返回类型;而使用该接口的用户并不需要定义返回类型，使用auto即可。
+template<typename Iter> auto fun1(Iter begin,Iter end)->decltype(*begin)
+{
+    return *begin;
+}
+
+// 把引用类型转换成变量本身的类型
+template<typename Iter>auto fun2(Iter begin,Iter end)->typename std::remove_reference<decltype(*begin)>::type
+{
+    return *begin;
+}
+
+
+
+
+
+
+struct Magic0{};
+struct Magic1{};
+class Magic0A
+{
+    public:
+        typedef Magic0 type;
+
+};
+
+class Magic1A
+{
+    public:
+        typedef Magic1 type;
+
+};
+
+template<class T> void Accept(T magic)
+{
+    std::cout<<"Magic general"<<std::endl;
+    Accept(magic, typename T::type());
+    Accept(magic, typename T::type());
+}
+
+//base
+template<class T> void Accept(T magic1, T magic2)
+{
+
+}
+
+//部分参数是通用类型
+template<class T> void Accept(T magic1, char mime)
+{
+   //magic1 = extract(mime);
+}
+
+//只有通用类型参数
+template<class T> void Accept(T magic, Magic1)
+{
+    std::cout<<"Maigc1"<<std::endl;
+}
+template<class T> void Accept(T magic, Magic0)
+{
+    std::cout<<"Magic0"<<std::endl;
+}
+
+
 
 
 

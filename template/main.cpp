@@ -24,9 +24,13 @@ int main()
     temp.infer1();
     temp.infer2();
 
-    std::cout<<sum1<double>(1, 2)<<std::endl;//实例化为double sum(int, int);
+    sum1<double>(1, 2);//实例化为double sum(int, int);
     sum1<int>(100, 'a');//int sum(int, char)
     sum1<int, int, char>(100, 'a');//int sum(int, char)
+    sum1<int>(100, 200);
+    //sum1(100, 200);错误，返回值不参与模板类型推断
+    //sum1<>(100, 200);错误，返回值不参与模板类型推断
+    sum1<char>('a', 'b');
 
     //template<long> int sum2(const long&, const long&)
     //由于显示指定了实参类型，所以正常的类型转换规则可以被应用，100被转换成long, 'a'被转换成long
@@ -38,6 +42,11 @@ int main()
     for(int i = 1; i < 5; i++)
         vec.push_back(i);
     std::cout<<sum3(vec.begin(), vec.end())<<std::endl;
+
+
+    std::cout<<"max="<<Max(1,2)<<std::endl;
+    std::cout<<"max="<<Max(1L,2)<<std::endl;
+    std::cout<<"max="<<Max('a','b')<<std::endl;
 
     std::cout<<"-------------类型萃取----------------"<<std::endl;
     test_traits();
@@ -63,8 +72,12 @@ int main()
     l1.Print();
     Tmp1<int, double>l2;
     l2.Print();
-    Tmp2<int>l3;
+    Tmp2<char, char>l3;//此处显示指定了第二个模板参数类型，则第二个模板参数类型是指定的类型，此处是char
     l3.Print();
+    l3.Print1();
+    Tmp2<char>l33;//此处未指定第二个模板参数的类型，则第二个模板参数类型是默认类型，即int
+    l33.Print();
+    l33.Print1();
     Tmp3<> l4;//Tmp3的所有模板参数都有默认值，此时定义该类型的对象时需要加空的尖括号<>
     l4.Print();
     Tmp4<int, char> l5;
