@@ -574,17 +574,24 @@ template<typename A> A Max(A x, A y)
     return x > y ? x:y;
 }
 
-template<>int Max(int x, int y)
+template<typename A>int Max(unsigned int x, A y)
 {
     std::cout<<"Max 特化版本1"<<std::endl;
     return x > y ? x:y;
 }
 
-template<typename A>int Max(unsigned int x, A y)
+template<>int Max(int x, int y)
 {
     std::cout<<"Max 特化版本2"<<std::endl;
     return x > y ? x:y;
 }
+
+//此版本等价于上面的特化版本2
+//template<>int Max<int>(int x, int y)
+//{
+//    std::cout<<"Max 特化版本2.1"<<std::endl;
+//    return x > y ? x:y;
+//}
 
 template<> char Max<char>(char x, char y)
 {
