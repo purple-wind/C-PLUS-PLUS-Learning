@@ -3,8 +3,6 @@
 #include "global.h"
 #include <sys/types.h>
 
-
-
 void Thread_SetQueue1()
 {
     bool bRet = false;
@@ -18,9 +16,9 @@ void Thread_SetQueue1()
 
         while ( !que.push ( tcp_node ) ) {};
         pushc++;
-// 		boost::thread::sleep(boost::get_system_time()+boost::posix_time::millisec(1));
-// 		boost::thread::sleep(boost::get_system_time()+boost::posix_time::microseconds(1));
-// 		boost::thread::sleep(boost::get_system_time()+boost::posix_time::milliseconds(1));
+        //boost::thread::sleep(boost::get_system_time()+boost::posix_time::millisec(1));
+        //boost::thread::sleep(boost::get_system_time()+boost::posix_time::microseconds(1));
+        //boost::thread::sleep(boost::get_system_time()+boost::posix_time::milliseconds(1));
     };
 }
 
@@ -33,12 +31,11 @@ void Thread_GetQueue1()
             popc++;
             free ( out->data );
             free ( out );
-//            int fd=open("./get1.txt",O_CREAT|O_RDWR|O_APPEND,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-//            std::string str(std::to_string(out.src_mac));
-//            str+="---1\n";
-//            write(fd,str.c_str(),str.size());
-//            close(fd);
-
+            //int fd=open("./get1.txt",O_CREAT|O_RDWR|O_APPEND,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
+            //std::string str(std::to_string(out.src_mac));
+            //str+="---1\n";
+            //write(fd,str.c_str(),str.size());
+            //close(fd);
         }
     }
 }

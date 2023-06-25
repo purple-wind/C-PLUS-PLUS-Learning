@@ -24,7 +24,6 @@ struct TcpData
     size_t len=0;
 };
 
-
 extern boost::atomic_int64_t pushc,popc,pushc_last,popc_last;
 extern pthread_mutex_t mutexlock;
 extern pthread_rwlock_t  rwlock;

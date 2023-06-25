@@ -30,9 +30,8 @@ static void getrnd ()
     *ptr = rand ();
     *(ptr + 1) = rand ();
     *(ptr + 2) = rand ();
-
-
 }
+
 void init_hash (void)
 {
     int i, n, j;
