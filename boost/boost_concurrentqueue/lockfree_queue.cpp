@@ -25,12 +25,13 @@ void Thread_SetQueue1()
 
 void Thread_GetQueue1()
 {
-    TcpData* out;
-    while ( 1 ) {
-        if ( que.pop ( out ) ) {
+    TcpData* out = nullptr;
+    while(true)
+    {
+        if (que.pop(out)) {
             popc++;
-            free ( out->data );
-            free ( out );
+            free(out->data);
+            free(out);
             //int fd=open("./get1.txt",O_CREAT|O_RDWR|O_APPEND,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
             //std::string str(std::to_string(out.src_mac));
             //str+="---1\n";
@@ -43,7 +44,7 @@ void Thread_GetQueue1()
 
 //void Thread_GetQueue2()
 //{
-//    TcpData* out;
+//    TcpData* out = nullptr;
 //    while(1)
 //    {
 //        if(que.pop(out))
