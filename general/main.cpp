@@ -5,6 +5,7 @@
 #include "enum_union.h"
 #include "destructor.hpp"
 #include "cpp14.hpp"
+#include "macro.hpp"
 
 void test_array_row_column()
 {
@@ -84,14 +85,12 @@ int main (int argc, char **argv)
     en.scopes_enum();
     en.my_union();
 
-    //可变长参数宏的使用方法
-    #define PT(format,...) printf(format,##__VA_ARGS__);
-    PT("%s %s %s","hello", "world", "\n")
-
+    std::cout<<"---------------枚举和联合-----------------------"<<std::endl;
     //变量模板
     std::cout << circular_area(2) << std::endl; 	// 12
     std::cout << circular_area(2.0) << std::endl;	// 12.5664
 
+    std::cout<<"---------------枚举和联合-----------------------"<<std::endl;
     //decltype推导
     extern void test_decltype_expr();
     extern void test_decltype_fun();
@@ -99,6 +98,11 @@ int main (int argc, char **argv)
     test_decltype_expr();
     test_decltype_fun();
     test_decltype_lv();
+
+    std::cout<<"---------------宏-----------------------"<<std::endl;
+    test0();
+    test1();
+    test2();
 
     return 0;
 }
