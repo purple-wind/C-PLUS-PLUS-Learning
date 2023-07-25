@@ -9,6 +9,8 @@
 //后面的逗号未被去掉。当可变长形参类表为空时，##会去掉__VA_ARGS__前面的第一个逗号和所有连续不可见字符
 #define PT1(format,...) printf(format,__VA_ARGS__)
 
+
+//宏粘贴
 //##的主要作用就是连接两个字符串，我们在宏定义中可以使用##来连接两个字符。预处理器在预处理阶段对宏展开时，会将##两边的字符合并，并删除##这两个字符。
 //当宏的可变长形参类表为空时，##会去掉__VA_ARGS_前面的第一个逗号和所有连续不可见字符
 
@@ -18,7 +20,7 @@ static void test0()
 }
 
 
-//使用宏连接符##要注意一下两条结论：
+//使用宏连接符(##)连接的对象中存在宏时要注意一下两条结论：
 //第一条：任何使用到胶水运算“##”对形参进行粘合的参数宏，一定需要额外的再套一层
 //第二条：其余情况下，如果要用到胶水运算，一定要在内部借助参数宏来完成粘合过程
 
@@ -27,7 +29,7 @@ static void test0()
 #define fun0(...)                             \
 {                                             \
       uint32_t tmp##M0 = 1;                   \
-      std::cout<<std::dec<<M0<<std::endl;               \
+      std::cout<<std::dec<<M0<<std::endl;     \
       std::cout<<__VA_ARGS__<<std::endl;      \
       std::cout<<tmp##M0<<std::endl;          \
 }
@@ -58,10 +60,10 @@ static void test1()
 #define APPEND1(__A, __B)    APPEND2(__A, __B)
 #define fun1(...)                             \
 {                                             \
-      uint32_t APPEND1(tmp, M0) = 1;                   \
+      uint32_t APPEND1(tmp, M0) = 1;          \
       std::cout<<M0<<std::endl;               \
       std::cout<<__VA_ARGS__<<std::endl;      \
-      std::cout<<APPEND1(tmp, M0)<<std::endl;          \
+      std::cout<<APPEND1(tmp, M0)<<std::endl; \
 }
 
 static void test2()
