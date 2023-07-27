@@ -4,11 +4,17 @@
 #include"my_allocator.h"
 #include"forward_declaring_shareptr.h"
 #include"safe_thread_ptr.hpp"
+#include"raw_pointer_array.hpp"
 
 extern void wrap_test_sharedptr();
 
 int main()
 {
+    test_second_rank_pointer();
+    test_realloc();
+    test_array_row_column();
+    
+    
     std::cout<<"-----------智能指针析构---------------"<<std::endl;
     wrap_test_sharedptr();
 
