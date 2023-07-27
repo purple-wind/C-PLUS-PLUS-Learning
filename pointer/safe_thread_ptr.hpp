@@ -8,7 +8,7 @@
  *  1.一个shared_ptr对象实体可被多个线程同时读取
  *  2.两个shared_ptr对象实体可以被两个线程同时写入
  *  3.如果多个线程同时读写同一个shared_ptr对象，那么需要加锁
- *  此处描述的是智能指针本身的线程安全级别，不是它管理对象的线程安全级别。它所管理对象的线程安全等级有被管理对象自身保证。
+ *  此处描述的是智能指针本身的线程安全级别，不是它管理对象的线程安全级别。它所管理对象的线程安全等级由被管理对象自身保证。
  *
  */
 void test_safe_thread0()
@@ -62,6 +62,7 @@ void test_safe_thread1()
     int i = 0;
     static std::shared_ptr<int> pointer = std::make_shared<int>(++i);
     std::thread t1(foo_value, pointer);
+    t1.detach();
     for (;;) {
       pointer = std::make_shared<int>(++i);
     }
@@ -72,6 +73,7 @@ void test_safe_thread2()
     int i = 0;
     static std::shared_ptr<int> pointer = std::make_shared<int>(++i);
     std::thread t1(foo_ref, std::ref(pointer));
+    t1.detach();
     for (;;) {
       pointer = std::make_shared<int>(++i);
     }
