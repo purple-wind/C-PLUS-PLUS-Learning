@@ -66,6 +66,8 @@ int main (int argc, char **argv)
     //199711L 03
     //201103L c++11
     //201402L c++14
+    //201510L c++15
+    //201703L c++17
 #if __cplusplus >= 201402L
     std::cout << circular_area(2) << std::endl; 	// 12
     std::cout << circular_area(2.0) << std::endl;	// 12.5664
