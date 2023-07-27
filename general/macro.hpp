@@ -73,4 +73,9 @@ static void test2()
 }
 
 
+
+//自定义的常用的宏
+#define INVALID_LEN(myuse, data_len, ...) if(myuse > data_len){return __VA_ARGS__;}
+
+
 #endif // MACRO_HPP
