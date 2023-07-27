@@ -10,7 +10,10 @@ extern void wrap_test_sharedptr();
 
 int main()
 {
+    std::cout<<"-----------原始指针---------------"<<std::endl;
+    std::cout<<"-------二级和多级指针-------"<<std::endl;
     test_second_rank_pointer();
+    std::cout<<"-------realloc-------"<<std::endl;
     test_realloc();
     test_array_row_column();
     
@@ -26,6 +29,7 @@ int main()
     MyAllocator alloc;
     alloc.used_allocator();
 
+    std::cout<<"-----------智能指针循环引用---------------"<<std::endl;
     {
         std::shared_ptr<CircularRef> ref0 = std::make_shared<CircularRef>();
         std::shared_ptr<CircularRef> ref1 = std::make_shared<CircularRef>();
@@ -33,6 +37,8 @@ int main()
         std::cout<<"ref1 ="<<ref1<<std::endl;
         std::cout<<"ref0 ptr="<<ref0->ptr<<std::endl;
         std::cout<<"ref1 ptr="<<ref1->ptr<<std::endl;
+        std::cout<<"ref0 use count="<<ref0.use_count()<<std::endl;
+        std::cout<<"ref1 use count="<<ref1.use_count()<<std::endl;
         ref1->ptr = ref0;
         ref0->ptr = ref1;
         std::cout<<"ref0 ptr="<<ref0->ptr<<std::endl;
@@ -51,7 +57,7 @@ int main()
     std::cout<<"address="<<p1.get()<<std::endl;
 
 
-
+    std::cout<<"-----------智能指针线程安全性---------------"<<std::endl;
     test_safe_thread0();
 //    test_safe_thread1();
     test_safe_thread2();
