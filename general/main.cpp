@@ -8,9 +8,11 @@
 #include "cpp14.hpp"
 #endif
 #include "macro.hpp"
+#include "const_constexpr.hpp"
 
 extern int test_arithmetic(void);
 extern int const_constexpr(void);
+extern void const_expression();
 extern void test_flexible_array();
 extern void test_low_align_high();
 extern void test_high_align_low();
@@ -86,6 +88,23 @@ int main (int argc, char **argv)
     test0();
     test1();
     test2();
+
+    std::cout<<"---------------const and constexpr------------------"<<std::endl;
+    const_expression();
+    constexpr_variable();
+
+    //int c0 = 0;
+    //constexpr int c1 = constexpr_fun(c0);
+    //std::cout<<"constexpr_fun ret="<<c1<<std::endl;
+
+    constexpr int c2 = 2;
+    constexpr int c3 = constexpr_fun(c2);
+    std::cout<<"constexpr_fun ret="<<c3<<std::endl;
+
+    int c4 = 4;
+    int c5 = constexpr_fun(c4);
+    std::cout<<"constexpr_fun ret="<<c5<<std::endl;
+
 
     return 0;
 }
