@@ -60,7 +60,16 @@ int main()
     std::cout<<"-----------智能指针线程安全性---------------"<<std::endl;
     test_safe_thread0();
 //    test_safe_thread1();
-    test_safe_thread2();
+//    test_safe_thread2();
+
+    std::cout<<"-----------获取对象地址，即使对象重载了&运算符---------------"<<std::endl;
+    std::cout<<"x address="<<std::addressof(x)<<" &x="<<&x<<std::endl;
+    shared_ptr<ForwardDeclar>y = nullptr;
+    std::cout<<"x address="<<std::__to_address(y)<<" &x="<<&y<<std::endl;
+#if __cplusplus > 201703L //since c++20
+    std::cout<<"x address="<<std::to_address(y)<<" &x="<<&y<<std::endl;
+#endif
+
 
     return 0;
 }

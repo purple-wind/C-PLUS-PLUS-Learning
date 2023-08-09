@@ -108,7 +108,7 @@ int main (int argc, char **argv)
     std::cout<<"constexpr_fun ret="<<c5<<std::endl;
 
     // value of res is computed at compile time.
-    int a = 45;
+    int a = 30;
     auto start = chrono::system_clock::now().time_since_epoch();
     const long int res = fib1(a);
     auto end = chrono::system_clock::now().time_since_epoch();
