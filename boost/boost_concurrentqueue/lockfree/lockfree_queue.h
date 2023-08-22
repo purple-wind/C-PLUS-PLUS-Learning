@@ -1,7 +1,5 @@
 #ifndef LOCKFREE_QUEUE_H
 #define LOCKFREE_QUEUE_H
-void Thread_SetQueue1();
-void Thread_GetQueue1();
-void Thread_GetQueue2();
-
+void thread_set_queue1();
+void thread_get_queue1();
 #endif // LOCKFREE_QUEUE_H

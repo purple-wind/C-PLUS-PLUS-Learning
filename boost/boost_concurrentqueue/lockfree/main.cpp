@@ -1,6 +1,6 @@
 #include <iostream>
 #include <boost/lockfree/queue.hpp>
-#include <boost/threadpool.hpp>
+#include </usr/include/boost/threadpool/boost/threadpool.hpp>
 #include <signal.h>
 #include "global.h"
 #include "lockfree_queue.h"
@@ -10,28 +10,28 @@ void cb(int sig)
     if(sig==SIGALRM)
     {
         std::cout<<"------------------"<<std::endl;
-        //std::cout<<"pushc="<<pushc<<std::endl;
         std::cout<<"push offset="<<pushc-pushc_last<<std::endl;
-        //std::cout<<"popc ="<<popc<<std::endl;
-        std::cout<<"pop offset="<<popc-popc_last<<std::endl;
+        std::cout<<"pop offset ="<<popc-popc_last<<std::endl;
         pushc_last.store(pushc);
         popc_last.store(popc);
-        //exit(0);
         alarm(1);
     }
 }
+
+
 int main()
 {
     signal(SIGALRM,cb);
     alarm(1);
 
     boost::threadpool::pool thread_pool(4);
-    thread_pool.schedule(&Thread_GetQueue1);
-    thread_pool.schedule(&Thread_GetQueue1);
-    thread_pool.schedule(&Thread_GetQueue1);
-    thread_pool.schedule(&Thread_SetQueue1);
+    thread_pool.schedule(&thread_set_queue1);
+    thread_pool.schedule(&thread_get_queue1);
+    thread_pool.schedule(&thread_get_queue1);
+    thread_pool.schedule(&thread_get_queue1);
+    std::cout<<"pend="<<thread_pool.pending()<<std::endl;
+    std::cout<<"empty="<<thread_pool.empty()<<std::endl;
     thread_pool.wait();
-
 
     //std::cout << "boost::lockfree::queue is ";
     //if (!spsc_queue.is_lock_free())
@@ -55,4 +55,3 @@ int main()
 
     return 0;
 }
-

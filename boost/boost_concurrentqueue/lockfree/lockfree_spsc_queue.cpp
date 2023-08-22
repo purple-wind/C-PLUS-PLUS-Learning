@@ -1,7 +1,5 @@
 #include "lockfree_spsc_queue.h"
-//是否生产完毕标志
-boost::atomic<bool> done (false);
-boost::lockfree::spsc_queue<TcpData, boost::lockfree::capacity<1> > spsc_queue;
+
 
 void producer()
 {

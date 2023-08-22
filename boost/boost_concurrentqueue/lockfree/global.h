@@ -30,4 +30,12 @@ extern pthread_rwlock_t  rwlock;
 extern std::map<std::string,std::deque<TcpData*>> tcp_map;
 extern boost::lockfree::queue<TcpData*, boost::lockfree::fixed_sized<false> > que;
 extern boost::atomic_int64_t temp;
+
+
+
+extern int producer_count;
+extern boost::atomic_int consumer_count;
+extern boost::atomic<bool> done;
+//boost::lockfree::spsc_queue是针对单生产者单消费者模型下做了特殊优化的无锁队列
+extern boost::lockfree::spsc_queue<TcpData, boost::lockfree::capacity<1> > spsc_queue;
 #endif // STRUCT_HEADER_H
