@@ -1,12 +1,11 @@
 #include <iostream>
 #include </usr/include/boost/threadpool/boost/threadpool.hpp>
-#include "global.h"
-#include <sys/types.h>
 #include <sys/syscall.h>
-#include <fcntl.h>
+#include "global.h"
 
 void thread_set_queue1()
 {
+    std::cout<<"set queue thread id="<<syscall(SYS_gettid)<<std::endl;
     while ( 1 ) {
         TcpData* tcp_node= ( TcpData* ) malloc ( sizeof ( TcpData ) );
         tcp_node->data= ( char* ) malloc ( 4096 );
@@ -25,7 +24,8 @@ void thread_set_queue1()
 
 void thread_get_queue1()
 {
-    std::cout<<"thread id="<<syscall(SYS_gettid)<<std::endl;
+
+    std::cout<<"get queue thread id="<<syscall(SYS_gettid)<<std::endl;
     TcpData* out = nullptr;
     while(true)
     {

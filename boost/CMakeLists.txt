@@ -8,8 +8,9 @@ target_link_libraries(asio_s pthread boost_system boost_thread )
 
 
 add_executable(concurrent   
-                boost_concurrentqueue/lockfree/global.cpp
-                boost_concurrentqueue/lockfree/main.cpp
-                boost_concurrentqueue/lockfree/lockfree_queue.cpp
+                boost_concurrent/lockfree/global.cpp
+                boost_concurrent/lockfree/lockfree_queue.cpp
+                boost_concurrent/lockfree/lockfree_spsc_queue.cpp
+                boost_concurrent/lockfree/main.cpp
     )
 target_link_libraries(concurrent boost_thread boost_system pthread)
