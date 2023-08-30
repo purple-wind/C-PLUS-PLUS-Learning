@@ -98,4 +98,37 @@ void wrap_test_sharedptr()
 
 
 
+
+
+//智能指针赋值是让 等号左边的智能指针 也 管理 等号右边的智能指针所管理的对象，只是增加了一个管理者。
+//当这个被管理对象修改时，都会修改。
+void test1_sharedptr()
+{
+    struct ST{
+            shared_ptr<int> x;
+            double y;
+
+    };
+    std::shared_ptr<ST> tmp0 = make_shared<ST>();
+    tmp0->x = make_shared<int>();
+    *tmp0->x = 0;
+    std::cout<<"tmp0->x="<<*tmp0->x<<std::endl;
+
+    std::shared_ptr<ST> tmp1 = make_shared<ST>();
+    tmp1->x = tmp0->x;
+    //修改了tmp1->x管理的对象，tmp0里该对象也变了，因为tmp0 tmp1的x管理的是同一个对象
+    *tmp1->x = 1;
+    std::cout<<"tmp0->x="<<*tmp0->x<<std::endl;
+    std::cout<<"tmp1->x="<<*tmp1->x<<std::endl;
+
+    //tmp0->x又管理了一个新对象，此时tmp1->x管理的是之前的旧对象。
+    //现在tmp0->x管理的对象变成100，tmp1->x管理的还是之前的对象，值为1
+    tmp0->x = make_shared<int>(100);
+    std::cout<<"tmp0->x="<<*tmp0->x<<std::endl;
+    std::cout<<"tmp1->x="<<*tmp1->x<<std::endl;
+}
+
+
+
+
 #endif

@@ -70,6 +70,10 @@ int main()
     std::cout<<"x address="<<std::to_address(y)<<" &x="<<&y<<std::endl;
 #endif
 
+    test1_sharedptr();
+
+
+
 
     return 0;
 }
