@@ -14,3 +14,6 @@ add_executable(concurrent
                 boost_concurrent/lockfree/main.cpp
     )
 target_link_libraries(concurrent boost_thread boost_system pthread)
+
+add_executable(numa_and_core boost_concurrent/lockfree/numa_and_core.cpp)
+target_link_libraries(numa_and_core pthread)
