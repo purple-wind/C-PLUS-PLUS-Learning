@@ -511,6 +511,19 @@ void test_traits()
     //*e5 = 200;
     std::cout<<std::is_const<const int* &>::value<<std::endl;
 
+    struct A {};
+    struct B { ~B(){} };
+
+    // is_trivially_destructible是判定一个类型是否是"容易销毁"的，所谓的"容易销毁"的类型需要满足如下三个条件：
+    // 1.未定义析构函数，即使用了默认析构函数
+    // 2.析构函数不能是虚函数
+    // 3.如果一个类型有基类或非静态的数据成员，是则它的基类或者非静态的数据成员必须全部也是"容易销毁的"
+    std::cout << std::boolalpha;
+    std::cout << "is_trivially_destructible:" << std::endl;
+    std::cout << "int: " << std::is_trivially_destructible<int>::value << std::endl;
+    std::cout << "A: " << std::is_trivially_destructible<A>::value << std::endl;
+    std::cout << "B: " << std::is_trivially_destructible<B>::value << std::endl;
+
 
 }
 
