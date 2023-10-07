@@ -11,5 +11,4 @@ boost::atomic_int64_t temp(0);
 
 
 //是否生产完毕标志
-boost::atomic<bool> done (false);
 boost::lockfree::spsc_queue<TcpData, boost::lockfree::capacity<1> > spsc_queue;
