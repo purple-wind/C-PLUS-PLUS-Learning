@@ -10,6 +10,7 @@
 #endif
 #include "macro.hpp"
 #include "const_constexpr.hpp"
+#include "assert_abc.hpp"
 
 extern int test_arithmetic(void);
 extern int const_constexpr(void);
@@ -164,6 +165,10 @@ int main (int argc, char **argv)
     constexpr LiteralConstClass7 c7;//LiteralConstClass7是字面值常量类，故可以定义constexpr对象
     constexpr LiteralConstClass1 c8;//LiteralConstClass1是字面值常量类，故可以定义constexpr对象
     constexpr LiteralConstClass1 c9 = c8;//LiteralConstClass1是字面值常量类，故可以用c8初始化
+
+    test_assert1(5);
+    test_assert2(5);
+    test_assert3(5);
 
     return 0;
 }
