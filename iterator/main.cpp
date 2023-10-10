@@ -222,6 +222,13 @@ class IteratorTest
                              std::istream_iterator<double>(),
                              std::ostream_iterator<double>(std::cout, " "));
             std::cout<<std::endl;
+
+
+            std::cout<<"-------输出迭代器关联到字符串，同时指定每个元素输出时指定|为分割符，作为算法的输出-------"<<std::endl;
+            std::ostringstream str2;
+            std::vector<std::string>item1{"abc","def","hijkl","m","nopqrst","uv","wxyz"};
+            std::copy(item1.begin(), item1.end(), std::ostream_iterator<std::string>(str2, "|"));
+            std::cout<<"xyz="<<str2.str()<<std::endl;
         }
 
         void test_ios_iter()
@@ -262,6 +269,7 @@ class IteratorTest
             {
                 std::cout<<"value1="<<item<<std::endl;
             }
+
         }
 
 };
@@ -283,5 +291,6 @@ int main()
     iter0.test_ios_iter();
     iter0.test_reverse();
     iter0.vec_iterator_as_out_interator();
+
     return 0;
 }
