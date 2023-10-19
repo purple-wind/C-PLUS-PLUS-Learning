@@ -21,6 +21,7 @@ void cbPrint(CircularBuffer *cb) {
     printf("size = 0x%x, start = %d, end = %d\n", cb->size, cb->start, cb->end);
 }
 
+//start end相差size个位置则表示缓冲区满了
 int cbIsFull(CircularBuffer *cb) {
     return (cb->end - cb->start == cb->size | cb->start - cb->end == cb->size) ? 1 : 0;
     //当size为2的幂时，等价于上面，上面的方式更通用，在size不为2的幂时也可正常工作，但是效率更低
@@ -48,6 +49,10 @@ void cbWrite(CircularBuffer *cb, int *elem) {
 }
 
 void cbRead(CircularBuffer *cb, int *elem) {
+    if(cbIsEmpty(cb))
+    {
+        return;
+    }
     *elem = cb->elems[cb->start % cb->size];
     //当size为2的幂时，等价于上面，上面的方式更通用，在size不为2的幂时也可正常工作，但是效率更低
     //*elem = cb->elems[cb->start & (cb->size - 1)];
