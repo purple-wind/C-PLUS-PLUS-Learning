@@ -11,6 +11,7 @@
 #include "macro.hpp"
 #include "const_constexpr.hpp"
 #include "assert_abc.hpp"
+#include "initialization_list.hpp"
 
 extern int test_arithmetic(void);
 extern int const_constexpr(void);
@@ -48,7 +49,7 @@ int main (int argc, char **argv)
     test_low_align_high();
     test_high_align_low();
     std::cout<<"------------------柔性数组---------------------"<<std::endl;
-//    test_flexible_array();
+    //    test_flexible_array();
 
     std::cout<<"------------------友元-----------------------"<<std::endl;
     Base base;
@@ -169,6 +170,10 @@ int main (int argc, char **argv)
     test_assert1(5);
     test_assert2(5);
     test_assert3(5);
+
+    std::cout<<"---------------统一初始化------------------"<<std::endl;
+    test_li();
+
 
     return 0;
 }

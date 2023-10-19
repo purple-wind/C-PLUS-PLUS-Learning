@@ -252,3 +252,14 @@ class LiteralConstClass7
         LiteralA e{'a', 1, 2.2};//e是字面值类型，条件2.1
         void fun0123(){}
 };
+
+#include<vector>
+//class CC
+//{
+//    public:
+//      static constexpr  char* arr[4] = {"123", "456"};
+////      static const std::vector<int> arr1 = {1,2,3};
+//      static constexpr double d0 = 0;
+//      static constexpr LiteralConstClass1 d1 = {'1', 2, 3.3};
+
+//};
