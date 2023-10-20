@@ -174,7 +174,15 @@ int main (int argc, char **argv)
     std::cout<<"---------------统一初始化------------------"<<std::endl;
     test_li();
 
+    ConstexprStaticMemberClass x;
+    std::cout<<"i="<<x.arr0[1]<<std::endl;//常量下标可以访问数组元素
+    for(int i = 0; i < 4; i++)
+    {
+        //std::cout<<"i="<<x.arr0[i]<<std::endl;//编译失败,非常量下标不可访问数组元素,因为下标在运行时才知道,但是在运行的代码中不存在数组的定义,所以编译时直接阻止该行为
+        //std::cout<<"arr0="<<x.arr0<<std::endl;//编译失败,访问数组名实际上是取数组首元素的地址,该数组都不存在,何来地址?所以编译时直接阻止该行为
+        //std::cout<<"&d0="<<&x.d0<<std::endl;//同上,d0不存在,更取不了地址,就像对宏取地址一样
 
+    }
     return 0;
 }
 

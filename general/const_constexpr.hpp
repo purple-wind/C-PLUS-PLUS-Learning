@@ -266,13 +266,18 @@ class LiteralConstClass11
 //类的constexpr静态成员变量
 //1.constexpr的静态成员变量必须在类内初始化,不能在类内申明类外定义
 //2.类内初始化只能是列表初始化方式，不能是其他方式，故类型要遵守列表初始化的限制
-//3.constexpr的静态成员变量类型支持整型、 浮点型、一维数组、字面值类型，支持多维数组但是在使用时只能取最底层维度的值，高维度值无法取
-// 例如 int arr[2][3] = {{1,2,3},{4,5,6}}在定义类可以正常定义，但是使用时只能使用 arr[0][1] arr[1][1]这样的最底层维度，但是使用arr[0] arr[1]这样的高
-// 维度就无法编译通过
+//3.constexpr的静态成员变量类型支持整型、 浮点型、数组、字面值类型
+// 注意支持数组时下标必须是编译期常量
+//    支持多维数组但是在使用时只能取最底层维度的值，高维度值无法取
+//    例如 int arr[2][3] = {{1,2,3},{4,5,6}}在定义类可以正常定义，
+//    但是使用时只能使用 arr[0][1] arr[1][1]这样的最底层维度，但是使用arr[0] arr[1]这样的高维度就无法编译通过
+//  为什么是这样呢？因为constexpr申明的是编译期常量，并不会定义这个对象。在编译的时候用到constexpr申明的对象时直接用它的内容去替换，
+//  所以如果在使用时如果使用了访问此类对象的语句，编译时直接报未定义。因为不存在这样的对象，又如何访问得了。
+//  数组的非常量标取数组元素、多维数组未访问最底层元素、一维数组数组名等都是访问此类对象，所以会报此对象未定义
 //4. 在类内成员变量只有静态的时候才可以申明成constexpr否则编译失败
 //5. 要在类内初始化非整型的静态成员变量，必须是constexpr
 
-//6.static const constexpr等类内初始化的影响
+//6.static const constexpr等修饰对类内初始化的影响
 //    1.非静态成员变量，不管是什么类型都可以在类内初始化
 //    2.静态成员变量则必须是const属性，且类型必须是整型，如果不想是整型，则要用constexpr修饰，此时可以把类型放宽到字面值类型
 
@@ -283,8 +288,8 @@ class ConstexprStaticMemberClass
         static constexpr int d0 = 1;
         static constexpr double d1 = 2;
         //constexpr int d3 = 1; //d3不是静态成员变量，所以c++11下编译失败
-        static constexpr  char* arr0[4] = {"123", "456"}; //constexpr的静态成员变量必须在类内初始化,不能在类内申明类外定义
-        static constexpr  int arr1[2][3] = {{1, 2, 3}, {4, 5, 6}}; //constexpr的静态成员变量必须在类内初始化,不能在类内申明类外定义
+        static constexpr  char* arr0[4] = {"123", "456"}; //constexpr的静态成员变量必须在类内初始化,不能在类内申明类外定义,数组使用时下标必须是编译期常量
+        static constexpr  int arr1[2][3] = {{1, 2, 3}, {4, 5, 6}}; //constexpr的静态成员变量必须在类内初始化,不能在类内申明类外定义。数组使用时下标必须是编译期常量
         //static constexpr LiteralConstClass1 d1 = {'1', 2, 3.3};//LiteralConstClass1有类内初始值，无法满足列表初始化条件，c++11下编译失败
         static constexpr LiteralConstClass11 c0 = {'1', 2, 3.3};//LiteralConstClass11无类内初始化，满足列表初始化条件，编译成功
         //static constexpr std::vector<int> vec0 = {1,2,3};//vector不是字面值类型，c++11下编译失败
