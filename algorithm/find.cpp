@@ -1,7 +1,7 @@
 #include"find.h"
 
 
-//二分查找前提是数据是有序的
+//二分查找前提是数据是有序的，非递归方式
 int binary_serach ( int key , int array[], int n )
 {
   int low = 0,high = n;
@@ -22,6 +22,7 @@ int binary_serach ( int key , int array[], int n )
   return -1;
 }
 
+//二分查找前提是数据是有序的，递归方式
 int binary_serach2 ( int key, int array[], int left , int right )
 {
   if ( left <= right )
