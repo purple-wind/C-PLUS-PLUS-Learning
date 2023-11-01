@@ -23,6 +23,7 @@ int main()
     temp.infer0();
     temp.infer1();
     temp.infer2();
+    temp.infer3();
 
     sum1<double>(1, 2);//实例化为double sum(int, int);
     sum1<int>(100, 'a');//int sum(int, char)
@@ -88,6 +89,8 @@ int main()
     l7.Print();
     Tmp4<char, int> l8;
     l8.Print();
+    Tmp5<1, 2, 3> l9;
+    std::cout << "l9.val=" << l9.val << std::endl;
 
 
     //引用类型经过std::is_const判断始终为false，即非const类型
@@ -121,10 +124,10 @@ int main()
     // 转发
     Flips flips;
     flips.test_flips();
-    VariadicTemplate var;
-    var.test();
 
     std::cout<<"--------------可变长参数模板-----------"<<std::endl;
+    VariadicTemplate var;
+    var.test();
     var.test1();
 
     return 0;

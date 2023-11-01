@@ -83,10 +83,11 @@ class fun_temp
         //1.从左值引用函数参数推断类型,只能传递给它一个左值或一个返回引用类型的表达式
         template<typename T> void left_refer ( T& left_value ) {
             T a=left_value;
-            std::cout<<"l arg="<<std::is_lvalue_reference<decltype(left_value)>::value<<std::endl;
-            std::cout<<"l T="<<std::is_lvalue_reference<decltype(a)>::value<<std::endl;
-            std::cout<<"l arg="<<std::is_rvalue_reference<decltype(left_value)>::value<<std::endl;
-            std::cout<<"l T="<<std::is_rvalue_reference<decltype(a)>::value<<std::endl;
+            std::cout<<"T is ref="<<std::is_reference<decltype(a)>::value<<std::endl;
+            std::cout<<"T is lref="<<std::is_lvalue_reference<decltype(a)>::value<<std::endl;
+            std::cout<<"T is rref="<<std::is_rvalue_reference<decltype(a)>::value<<std::endl;
+            std::cout<<"arg is lref="<<std::is_lvalue_reference<decltype(left_value)>::value<<std::endl;
+            std::cout<<"arg is rref="<<std::is_rvalue_reference<decltype(left_value)>::value<<std::endl;
             a=2;
             std::cout<<"left_value="<<left_value<<std::endl;
         }
@@ -99,12 +100,12 @@ class fun_temp
         //2.从 右值引用函数参数类型推断，推断出的类型是该右值的实参类型
         template<typename T> void right_refer ( T&& right_value ) {
             T b=right_value;
-            std::cout<<"r arg="<<std::is_reference<decltype(right_value)>::value<<std::endl;
-            std::cout<<"r T="<<std::is_reference<decltype(b)>::value<<std::endl;
-            std::cout<<"r arg="<<std::is_lvalue_reference<decltype(right_value)>::value<<std::endl;
-            std::cout<<"r T="<<std::is_lvalue_reference<decltype(b)>::value<<std::endl;
-            std::cout<<"r arg="<<std::is_rvalue_reference<decltype(right_value)>::value<<std::endl;
-            std::cout<<"r T="<<std::is_rvalue_reference<decltype(b)>::value<<std::endl;
+            std::cout<<"T is ref="<<std::is_reference<decltype(b)>::value<<std::endl;
+            std::cout<<"T is lref="<<std::is_lvalue_reference<decltype(b)>::value<<std::endl;
+            std::cout<<"T is rref="<<std::is_rvalue_reference<decltype(b)>::value<<std::endl;
+            std::cout<<"arg is ref="<<std::is_reference<decltype(right_value)>::value<<std::endl;
+            std::cout<<"arg is lref="<<std::is_lvalue_reference<decltype(right_value)>::value<<std::endl;
+            std::cout<<"arg is rref="<<std::is_rvalue_reference<decltype(right_value)>::value<<std::endl;
 
             std::cout<<"right value1="<<right_value<<std::endl;
             b += 3;
@@ -148,9 +149,26 @@ class fun_temp
             int value1 = 1;
             int&& refer = 1;
             int& refer1 = value1;
+            int& refer2 = refer;
+
+
+            std::cout<<"refer is ref="<<std::is_reference<decltype(refer)>::value<<std::endl;
+            std::cout<<"refer is lref="<<std::is_lvalue_reference<decltype(refer)>::value<<std::endl;
+            std::cout<<"refer is rref="<<std::is_rvalue_reference<decltype(refer)>::value<<std::endl;
+
+            std::cout<<"refer1 is ref="<<std::is_reference<decltype(refer1)>::value<<std::endl;
+            std::cout<<"refer1 is lref="<<std::is_lvalue_reference<decltype(refer1)>::value<<std::endl;
+            std::cout<<"refer1 is rref="<<std::is_rvalue_reference<decltype(refer1)>::value<<std::endl;
+
+
+            std::cout<<"refer2 is ref="<<std::is_reference<decltype(refer2)>::value<<std::endl;
+            std::cout<<"refer2 is lref="<<std::is_lvalue_reference<decltype(refer2)>::value<<std::endl;
+            std::cout<<"refer2 is rref="<<std::is_rvalue_reference<decltype(refer2)>::value<<std::endl;
+
 
             left_refer(refer); //因为是形参左值引用，所以实参只能是左值，模板类型为实参类型，T类型为int
             left_refer(refer1); //因为是形参左值引用，所以实参只能是左值，模板类型为实参类型，T类型为int
+            left_refer(refer2);
             //left_refer(1);错误
 
             right_refer(value1);//函数形参为右值引用类型且实参是int(左值)，所以模板类型为实参类型的引用,即T=int&;参数形式为int& &&,折叠为int&,
@@ -167,7 +185,24 @@ class fun_temp
             std::cout<<"value1="<<value1<<std::endl;
         }
 
+        //类型别名引起的类型折叠
+        void infer3()
+        {
+            using A = int&;
+            using B = int&&;
 
+            int value0 = 1;
+            //A a0 = 1;//编译失败
+            A a0 = value0; // int& a0 = value0;
+            A &a1 = value0;// int& &a ---> int &a1 = value0;
+            A &&a2 = value0;// int& &&a2---> int &a2 = value0;
+
+            B &b0 = value0;// int&& &b0---> int &b0 = value0;
+            //B &&b1 = value0;// int&& &&b1--->int &&b1 = value0,编译失败，因为折叠后b1为右值引用类型，只能引用右值，而value0是一个左值
+            B &&b1 = std::move(value0);
+            B &&b2 = 1;
+
+        }
 
         //牛叉的std::move()，标准库使用这一特性的经典例子
         template<typename T> typename std::remove_reference<T>::type&& move ( T&& t ) {
@@ -331,29 +366,56 @@ class Flips
 
 
 /*可变长参数模板
+ * 1.存在两种参包：
+ *      1.模板参数包,表示零个或者多个模板参数
+ *      2.函数参数包,表示零个或者多个函数参数
+ *  使用...来表示一个参数包:
+ *      当...出现在模板参数列表中时表示模板参数包,例如: template<typename...x>，表示参数x代表零个或者多个类型列表
+ *      如果一个函数的参数类型是一个模板参数包,则函数的该参数也是一个函数参数包,例如: template<typename...Args> void foo(Args...y),表示参数y代表零个或者多个函数参数,注意Args...y中
+ *      的...表示的是对模板参数包的扩展
+ * 2.在模板参数的位置也可以表示非模板参数包,表示非模板参数包的方法是在一个明确的类型后面跟一个省略号,例如:template<int...Args>,此处的Args表示零个或者多个int类型的非类型模板参数
+ * 3.sizeof...运算符,当我们希望知道包中有多少个元素时,可以实用sizoef...(Args)计算包中元素个数,sizeof...返回一个常量表达式并且不会对其参数求值
+ * 4.包扩展,对于一个参数包,除了获取其大小外，唯一能做的就是对它进行扩展。当扩展一个包时,还要提供用于对每个扩展元素的模式。扩展一个包就是将它分解为构成的元素，对每个元素应用模式，然后获取扩展后
+ *   的列表。扩展一个包的语法就是在模式的右边放一个省略号来触发扩展
+ * 5.模式,模式是在包扩展时指定对每个扩展元素做一个操作,这个操作可以是一个函数,可以是一个cv限定操作。假如包扩展是一个自增函数,则包扩展出来的每个元素都做一个自增操作。加入模式是一个const限定,则
+ *   包中扩展出来的每个元素都加上const限定。如果模式是空,则表示仅仅将包扩展为其构成元素
  */
 class VariadicTemplate
 {
     public:
         //模板参数包格式
-        template<typename T,typename...Arg> T foo1 ( T t,Arg...arg )
+        template<typename T, typename...Args> T foo1 ( T t, Args...rest)
         {
-            std::cout<<"run fool"<<std::endl;
-            std::cout<<"foo1  "<<sizeof... ( arg ) <<std::endl;
+            std::cout << __FUNCTION__ << std::endl;
+            std::cout << "sizoef...Args="<<sizeof...(Args) << " sizeof...rest=" << sizeof...(rest) <<std::endl;
             return t;
         }
         //非模板参数类型参数包格式
         template<int ...N>void foo2()
         {
+            std::cout << __FUNCTION__ << std::endl;
+            std::cout << "sizoef...N="<<sizeof...(N) <<std::endl;
+        }
 
-        }
-        void test()
-        {
-            foo1 ( 10,'a',"hello" );
-        }
+//        void foo3()
+//        {
+////            std::cout << "x=" << x << std::endl;
+//        }
+
+//        template<int x>void foo3()
+//        {
+
+//        }
+
+//        template<int x, int ...N>void foo3()
+//        {
+//            std::cout << __FUNCTION__ << std::endl;
+//            std::cout << "sizoef...N="<<sizeof...(N) <<std::endl;
+//            std::cout << "x=" << x << std::endl;
+//            foo3<N...>();
+//        }
 
         //变长参数模板的函数实现，一般是采用递归的方式，第一步调用处理包中的第一个实参，然后用剩余实参调用自身。
-
         //根据模板参数的重载匹配，当最后一个递归调用到print时，参数包只有一个参数，此时该函数和下面函数的匹配度一样高，
         //但是该函数相对于可变参数模板更特例化，故选择该函数。
         template<typename T> std::ostream& print ( std::ostream& os,const T& t )
@@ -374,8 +436,7 @@ class VariadicTemplate
 
 
 
-
-
+        //扩展和模式
         //模式还可以是一个函数，比如此函数中模式就是print1_used(arg)，表示用参数包中的每个元素调用print1_used
         template<typename T>T  print1_used ( const T& t )
         {
@@ -396,22 +457,6 @@ class VariadicTemplate
             return print1 ( os,print1_used ( arg )... );//此处的模式是print1_used()函数
         }
 
-
-
-        //  可变长参数函数模板的作用通常是将它们的参数转发给其它函数，所以它们一般形式为：
-        // 	template<typename ...Type>fun(Type&&...arg)
-        // 	{
-        // 		work(std::forward<Type>(arg)...);
-        // 	}
-        //     此示例中把fun的可变参数传递给work函数，保持参数的所有属性。
-        // 	 此例中即扩展了模板参数包也扩展了函数参数包
-        template<typename...Type>void forward_print (std::ostream& os, Type&&...args )
-        {
-            print1(os,std::forward<Type> ( args )... ); //此处的模式是std::forward，把forward_print接收到的可变长参数的属性原封不动的转发给print1函数
-        }
-
-
-
         template<typename T> T& add ( T& t )
         {
             return ++t;
@@ -427,16 +472,66 @@ class VariadicTemplate
         }
 
 
+
+        // 可变长参数的转发
+        // 可变长参数函数模板的作用通常是将它们的参数转发给其它函数，所以它们一般形式为：
+        //  template<typename ...Type>fun(Type&&...arg)
+        // 	{
+        // 		work(std::forward<Type>(arg)...);
+        // 	}
+        // 此示例中把fun的可变参数传递给work函数，保持参数的所有属性。
+        // 此例中std::forward<Type>(arg)...即扩展了模板参数包也扩展了函数参数包
+
+        template<typename...Type>void forward_print (std::ostream& os, Type&&...args )
+        {
+            print1(os,std::forward<Type> ( args )... ); //此处的模式是std::forward，把forward_print接收到的可变长参数的属性原封不动的转发给print1函数
+        }
+
+
+
+
+        void test()
+        {
+            foo1(10, 'a', "hello", 1.1);
+            foo1(10,'a',"hello" );
+            foo1(10, 'a');
+            foo1(10);
+            foo2<1, 2, 3, 4>();
+            foo2<1, 2, 3>();
+            foo2();
+
+//            foo3<1, 2, 3>();
+
+
+        }
+
         void test1()
         {
             std::ostream& os=std::cout;
-            print ( os,'1',"2","3","4",5,1.1 );
-            print1 ( os,1,2,3,1.1 );
-            forward_print ( os,1,2,3,4,5,6 );
+            print (os, '1', "2", "3", "4", 5, 1.1);
+
+            print(os, 'a', 1, 2.2);
+            //此句等价于下面的伪代码，实际上在编译时实例化了如下3个函数，且调用关系如下
+            //std::ostream& print(std::ostream os, char a, int b, double c)
+            //{
+            //    os << a <<", ";
+            //    print(os, b, c);
+            //}
+            //std::ostream& print(std::ostream os, int b, double c);
+            //{
+            //    os << b <<", ";
+            //    print(os, c);
+            //}
+            //std::ostream& print(std::ostream os, double c)
+            //{
+            //    os << c << ", ";
+            //}
+
+            print1 (os, 1, 2, 3, 1.1);
+            forward_print(os, 1, 2, 3, 4, 5, 6);
             int a1=1,a2=2,a3=3;
             expand ( a1,a2,a3 );
             std::cout<<"a1="<<a1<<"\ta2="<<a2<<"\ta3="<<a3<<std::endl;
-            // 		abc();
         }
 };
 
