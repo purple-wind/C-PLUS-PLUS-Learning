@@ -1,4 +1,4 @@
-#include"class_temp.hpp"
+#include"class_template.hpp"
 #include"fun_template.hpp"
 #include<vector>
 extern template class Blob<double>;

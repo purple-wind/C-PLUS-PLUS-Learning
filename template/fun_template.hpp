@@ -423,6 +423,12 @@ class VariadicTemplate
             return os<<t<<std::endl;
         }
 
+        //使用此函数也可代替上面的函数做最后一个结束版本
+        //template<typename ...Args> std::ostream& print ( std::ostream& os)
+        //{
+        //    return os << std::endl;
+        //}
+
         //除最后一次调用外其它的调用完美匹配的是该可变参数模板函数，上面的print函数不匹配。
         //const Args...rest是包扩展，扩展一个包就是将它分解为构成的元素，通过在模式右边放一个省略号来触发包扩展。
         //下面的例子中对Args的扩展中，编译器将模式const Arg&应用到模板参数包Args中的每个元素，每个参数类型为const type&
