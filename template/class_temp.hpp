@@ -37,6 +37,7 @@
  *				一种是指对部分模板参数进行全特化
  *				另一种是对模板参数特性进行特化，包括将模板参数特化为指针、引用或是另外一个模板类
  *14.类的缺省模板参数，类模板也可以制定缺省模板实参，当我们为类模板所有模板参数指定了缺省参数，当我们想以缺省参数实例化模板类时，需要在类名后跟一对空括号。
+ *15.可变长模板参数的类模板，类模板也支持可变长模板参数。
  */
 
 
@@ -112,7 +113,7 @@ template<typename T> class Blob{
      */
         template<typename X> friend class Pal2;
 
-        /*Pal3是一个非类型模板类，它是所有Blob实例的友元,Pal3不需要前置声明*/
+        /*Pal3是一个非类型模板参数类，它是所有Blob实例的友元,Pal3不需要前置声明*/
         friend class Pal3;
 
         /*将模板自己的类型参数声明为模板的友元,即将访问权限授予用来实例化Blob的类型
@@ -264,7 +265,7 @@ template<typename T, typename A> void Tmp2<T, A>::Print1()
 //{
 //}
 
-//所有模板参数都有默认值，此时定义该类型的对象时需要加空的尖括号<>
+//所有模板参数都有默认值，此时定义该类型的对象时如果不想指定模板参数而使用默认参数是可以的,但是需要在类名后加空的尖括号<>
 template<typename T = int> class Tmp3{
     public:
         void Print()
@@ -309,4 +310,93 @@ template<>class Tmp4<char, int>{
         }
 };
 
+//未命名的模板参数的意义
+
+//定义模板类型参数的默认值是int,如果未指定模板类型参数则模板类型参数为int
+template<typename T = int>class Tmp7
+{
+
+};
+
+//未命名的模板类型参数,如果类实例化时未指定模板参数，则模板参数为int,未命名的模板参数主要用于
+//类实现和声明分开的场景时，用于申明时不指定模板参数的名字，定义时可以给该模板参数指定名字，如果定义时也不
+//给该模板参数指定名字，则该模板参数无法使用
+template<typename = int>class Tmp8
+{
+
+};
+
+//未命名的非类型模板参数，表示一个编译期常量。也是用于类实现和声明分开的场景时，
+//用于申明时不指定非类型模板参数的名字，定义时可以给该模板参数指定名字。如果定义时也不
+//给该模板参数指定名字，则该非类型模板参数无法使用
+template<int>class Tmp9
+{
+
+};
+
+//未命名的模板参数还有一个用处是:当未命名模板参数是非类型模板参数时，用于模板类的偏特化，即指定当前类型的非类型
+//模板参数时，选中该类
+
+
+//---------------------------------------------------------------------------------
+//可变长参数的模板类
+//---------------------------------------------------------------------------------
+//类型模板参数可变长
+template<typename ...Args>class Tmp6
+{
+    public:
+        Tmp6()
+        {
+            std::cout<<"all"<< " " << sizeof...(Args) << std::endl;
+        }
+};
+
+template<typename T, typename ...Args>class Tmp6<T, Args...> : private Tmp6<Args...>
+{
+
+    public:
+        Tmp6()
+        {
+            std::cout<<"part"<< " " << sizeof...(Args) << std::endl;
+        }
+};
+
+//template<> class Tmp6<>
+//{
+//    public:
+//        Tmp6()
+//        {
+//            std::cout<<"end"<<std::endl;
+//        }
+//};
+
+
+
+//非类型模板类型参数可变长
+template<int...args> struct Tmp5
+{
+        Tmp5()
+        {
+            std::cout << "all=" << std::endl;
+        }
+};
+
+template<int T, int... args> struct Tmp5<T, args...>
+{
+        static const int val = T * Tmp5<args...>::val;
+        Tmp5()
+        {
+            std::cout << "part val=" << val << std::endl;
+        }
+};
+
+template<int T> struct Tmp5<T>
+{
+        //终止条件
+        static const int val = T;
+        Tmp5()
+        {
+            std::cout << "end val=" << val << std::endl;
+        }
+};
 #endif

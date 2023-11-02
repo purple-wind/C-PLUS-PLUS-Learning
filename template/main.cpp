@@ -92,6 +92,8 @@ int main()
     Tmp5<1, 2, 3> l9;
     std::cout << "l9.val=" << l9.val << std::endl;
 
+    Tmp6<char, int, double> l10;
+
 
     //引用类型经过std::is_const判断始终为false，即非const类型
     //检查引用的类型的const属性的正确方式是移除引用:is_const<typename remove_reference<T>::type>
