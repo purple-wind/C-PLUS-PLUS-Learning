@@ -4,7 +4,6 @@
 #include "single_link.h"
 #include "sort.h"
 #include "find.h"
-#include "ringbuffer.h"
 int main()
 {
 //count算法,计算出某个元素在序列中出现的次数
@@ -57,14 +56,10 @@ int main()
   int array1[10] = {6,1,2,7,9,3,4,5,10,8};
 //  bubble_sort ( array1,10 );
 //  selection_sort ( array1,10 );
-//  insert_sort ( array1,10 );
-  quick_sort ( array1,0,9 );
+  insert_sort ( array1,10 );
+//  quick_sort ( array1,0,9 );
   for ( int i = 0; i <sizeof ( array1 ) /sizeof ( int ); i++ )
     {
       printf ( "array[%d]=%d\n",i,array1[i] );
     }
-
-
-  TestRingbuffer();
-
 }
