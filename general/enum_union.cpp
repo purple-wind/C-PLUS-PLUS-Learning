@@ -94,7 +94,7 @@ enum_union& enum_union::operator=(const enum_union& other)
 }
 
 /**
- * @brief 拷贝赋值运算符的常函数版本
+ * @brief ==运算符的常函数版本
  * 
  * @param other ...
  * @return bool

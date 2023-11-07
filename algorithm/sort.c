@@ -33,7 +33,7 @@ void bubble_sort ( int array[],int length )
 
 //2.快速排序
 //基本思想:找到一个基数,通过一趟排序将记录分割成独立的两部分，其中一部分记录比基数小,另一部分比基数大。
-//然后分别对两部分进行此操作,直到整个序列有序
+//然后分别对两部分进行此操作,直到基数左右两边的序列个数为1停止
 //O(nlogn) O(nlogn) O(n^2) 不稳定
 void quick_sort ( int array[], int left, int right )
 {
