@@ -46,19 +46,26 @@ class t3 {
         t3()=default;
         t3(int a,char b):value1(a),value2(b){std::cout<<"t3 2个参数构造函数"<<std::endl;}
         t3(const t3& that){
-            std::cout<<"t3 浅拷贝构造"<<std::endl;
+            std::cout<<"t3 拷贝构造"<<std::endl;
             value1=that.value1;
             value2=that.value2;
         }
-        int value1;
-        char value2;
+        t3(t3&& that)
+        {
+             std::cout<<"t3 移动构造"<<std::endl;
+             value1=that.value1;
+             value2=that.value2;
+        }
         t3& operator=(const t3& rv)
         {
-            std::cout<<"t3 浅拷贝赋值"<<std::endl;
+            std::cout<<"t3 拷贝赋值"<<std::endl;
             value1=rv.value1;
             value2=rv.value2;
             return *this;
         }
+    private:
+        int value1;
+        char value2;
 };
 
 template<typename T1,typename T2 ,class T3 > class Class_temp {
