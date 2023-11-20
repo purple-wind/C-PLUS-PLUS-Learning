@@ -4,7 +4,7 @@
 #include <type_traits>
 #include "my_friend.hpp"
 #include "enum_union.h"
-#include "destructor.hpp"
+#include "constructor_destructor.hpp"
 #if __cplusplus >= 201402L
 #include "cpp14_17_20.hpp"
 #endif
@@ -23,25 +23,17 @@ extern void test_high_align_low();
 #include<utility>
 #include<memory>
 #include<vector>
+
 int main (int argc, char **argv)
 {
-    std::cout<<"---------------内置数组析构-------------------"<<std::endl;
-    /*内置数组在出作用域时会自动析构数组内的元素，且从后向前析构*/
-    {
-
-        A a[3];
-        for(int i = 0; i<3;i++)
-        {
-            a[i].a = i;
-        }
-        std::cout<<"after"<<std::endl;
-    }
-    /*当数组作为类的成员变量时，类析构时会自动析构数组成员内的元素，且从后向前析构*/
-    {
-        DelArray da;
-    }
-    std::cout<<"out"<<std::endl;
-
+    std::cout<<"---------------构造和析构-------------------"<<std::endl;
+    test_constructor_destructor();
+    test_delete_copy_contral();
+    test_my_strvec();
+    test3();
+    exit(0);
+    std::cout<<"------内置数组析构-------------"<<std::endl;
+    test_array_destructor();
     std::cout<<"------------------整数溢出---------------------"<<std::endl;
     test_arithmetic();
 
@@ -49,7 +41,7 @@ int main (int argc, char **argv)
     test_low_align_high();
     test_high_align_low();
     std::cout<<"------------------柔性数组---------------------"<<std::endl;
-    //    test_flexible_array();
+    test_flexible_array();
 
     std::cout<<"------------------友元-----------------------"<<std::endl;
     Base base;

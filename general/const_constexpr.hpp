@@ -304,3 +304,16 @@ class ConstexprStaticMemberClass
         static const int d5 = 1;//整型的const静态变量可以在类内初始化
         //static const double d6 = 1.1;//非整型的const静态变量不可以在类内初始化，要想在类内初始化则把const改成constexpr，c++11下编译失败
 };
+
+//const对函数重载的影响
+
+//void test4(int x)
+//{
+
+//}
+
+//void test4(const int x)
+//{
+
+//}
+
