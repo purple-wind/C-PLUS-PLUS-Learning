@@ -26,8 +26,9 @@ int main()
     x.Print();
 
     std::cout<<"-----------自定义内存管理---------------"<<std::endl;
-    MyAllocator alloc;
-    alloc.used_allocator();
+    MyAllocator alloc(10);
+    alloc.test_general();
+    alloc.test_copy_fill();
 
     std::cout<<"-----------智能指针循环引用---------------"<<std::endl;
     {
