@@ -92,6 +92,9 @@ public:
 	std::function<int(int,int,int)>f=static_number;
 	f(1,2,3);
 	//std::mem_fn(this->no_static_number);
+    std::cout << "name=" << typeid(std::function<int(int, double)>::first_argument_type).name() << std::endl;
+    std::cout << "name=" << typeid(std::function<int(int, double)>::second_argument_type).name() << std::endl;
+
     }
 };
 

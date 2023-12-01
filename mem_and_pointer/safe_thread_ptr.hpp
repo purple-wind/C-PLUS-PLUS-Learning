@@ -28,9 +28,9 @@ void test_safe_thread0()
 //因为一旦智能指针被值方式传递到线程中，即是线程还没开始运行，此时实参的引用计数已经
 //增加了1，无论其它线程如何交织执行，也不会让实参指向的内存对应的引用计数小于1。
 //以此处为例，当该函数以线程处理函数被启动时，arg已经被传递进来了，
-//此时外部的实参的cnt=2，即test_safe_thread2中的pointer->cnt=2
-//即foo_value中的arg和test_safe_thread2中的poninter指向的是同一个被管理的
-//内存int*, 他们的引用计数指针也是同一个且为2。此后无论foo_value和test_safe_thread2两个
+//此时外部的实参的cnt=2，即test_safe_thread1中的pointer->cnt=2
+//即foo_value中的arg和test_safe_thread1中的poninter指向的是同一个被管理的
+//内存int*, 他们的引用计数指针也是同一个且为2。此后无论foo_value和test_safe_thread1两个
 //线程如何交织执行都是线程安全的。因为在foo_value内部arg已经增加了引用计数，在foo_value之外的
 //任意线程都不会使引用计数减少到小于1的状态。别的线程同理。
 void foo_value(std::shared_ptr<int> arg)
