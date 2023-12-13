@@ -17,6 +17,11 @@ public:
         std::queue<T>::c.clear();
     }
 
+    bool push(T& v)
+    {
+        std::queue<T>::push(v);
+    }
+
     bool pop(T& v)
     {
         v = std::queue<T>::front();
