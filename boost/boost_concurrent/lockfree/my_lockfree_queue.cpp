@@ -130,3 +130,63 @@ int main()
     }
     std::cout<< "count=" << c << std::endl;
 }
+
+
+
+
+typedef uint64_t U8;
+
+struct TNode {
+    TNode* m_pNext;
+};
+
+template<class T>
+union THead {
+        struct {
+                U8  m_nABA : 4;
+                U8  m_pNode:60;  // Windows only supports 44 bits addressing anyway.
+        };
+        U8  m_n64; // for CAS
+        // this constructor will make an atomic copy on intel
+        THead(THead& r)         { m_n64 = r.m_n64; }
+        T* Node()               { return (T*)m_pNode; }
+        // changeing Node bumps aba
+        void Node(T* p)         { m_nABA++; m_pNode = (U8)p; return this; }
+};
+
+// pop pNode from head of list.
+template<class T>
+T* Pop(volatile THead<T>& Head) {
+    while (1) { // race loop
+        // Get an atomic copy of head and call it old.
+        THead<T> Old(Head);
+        if (!Old.Node())
+            return NULL;
+        // Copy old and call it new.
+        THead<T> New(Old);
+        // change New's Node, which bumps internal aba
+        New.Node(Old.Node()->m_pNext);
+        // compare and swap New with Head if it still matches Old.
+        if (CAS(&Head.m_n64, Old.m_n64, New.m_n64))
+            return Old.Node(); // success
+        // race, try again
+    }
+}
+
+// push pNode onto head of list.
+template<class T>
+void Push(volatile THead<T>& Head, T* pNode) {
+    while (1) { // race loop
+        // Get an atomic copy of head and call it old.
+        // Copy old and call it new.
+        THead<T> Old(Head), New(Old);
+        // Wire node t Head
+        pNode->m_pNext = New.Node();
+        // change New's head ptr, which bumps internal aba
+        New.Node(pNode);
+        // compare and swap New with Head if it still matches Old.
+        if (CAS(&Head.m_n64, Old.m_n64, New.m_n64))
+            break; // success
+        // race, try again
+    }
+}
