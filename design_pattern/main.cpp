@@ -1,6 +1,7 @@
 #include "singleton1.hpp"
 #include "singleton2.hpp"
 #include "observer.hpp"
+#include "factory.hpp"
 
 int main(int argc,char* argv[])
 {
@@ -48,7 +49,33 @@ int main(int argc,char* argv[])
     delete obj1;
 
 
+    //Factory
 
+    //简单工厂
+    SimpleFactory sim_factory;
+    BaseProduct* pr1 = sim_factory.Create("Product1");
+    BaseProduct* pr2 = sim_factory.Create("Product2");
+
+    //普通工厂,每增加一个产品需要对应的增加一个工厂
+    BaseFactory* factory = new FactoryProduct1();
+    pr1 = factory->Create();
+    factory = new FactoryProduct2();
+    pr2 = factory->Create();
+
+    //抽象工厂,每个工厂对应一个产品大类，每个工厂可以生产产品大类中的多个小类。
+    //每增加一个大类，需要增加一个工厂。每增加一个小类需要修改基类和对应的大类的工厂。
+    //但是已经写好了的使用工厂基类的客户代码不用改变
+    AbstractFactory* abs_factory = new FactoryProductA();
+    AbstractProduct0* abs_pr0 = abs_factory->Create0();
+    AbstractProduct1* abs_pr1 = abs_factory->Create1();
+
+    abs_factory = new FactoryProductB();
+    abs_pr0 = abs_factory->Create0();
+    abs_pr1 = abs_factory->Create1();
+
+    //假如上面代码已经写好了，此后又添加了ProductA2，上面的代码不用修改。
+    //但是增加了ProductA2后，B工厂也要实现2这种产品
+    abs_factory->Create2();
 
     return 0;
 }
