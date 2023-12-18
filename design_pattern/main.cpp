@@ -80,12 +80,15 @@ int main(int argc,char* argv[])
 
 
     //建造者模式
-    Builder* builder = new ConcreateBuilder2();
+    Builder* builder = new ConcreateBuilder1();
     Director director1(builder);
-    director1.Build();
+    Product* product = director1.Build();
+    std::cout << "part1=" << product->part1 << " part2=" << product->part2 << " part3=" << product->part3 << std::endl;
 
     builder = new ConcreateBuilder2();
     Director director2(builder);
-    director2.Build();
+    product = director2.Build();
+    std::cout << "part1=" << product->part1 << " part2=" << product->part2 << " part3=" << product->part3 << std::endl;
+
     return 0;
 }
