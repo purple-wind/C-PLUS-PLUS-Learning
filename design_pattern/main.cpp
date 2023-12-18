@@ -2,6 +2,7 @@
 #include "singleton2.hpp"
 #include "observer.hpp"
 #include "factory.hpp"
+#include "buildder.hpp"
 
 int main(int argc,char* argv[])
 {
@@ -77,5 +78,14 @@ int main(int argc,char* argv[])
     //但是增加了ProductA2后，B工厂也要实现2这种产品
     abs_factory->Create2();
 
+
+    //建造者模式
+    Builder* builder = new ConcreateBuilder2();
+    Director director1(builder);
+    director1.Build();
+
+    builder = new ConcreateBuilder2();
+    Director director2(builder);
+    director2.Build();
     return 0;
 }
