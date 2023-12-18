@@ -4,7 +4,7 @@
 #include "factory.hpp"
 #include "buildder.hpp"
 #include "prototype.hpp"
-
+#include "facade.hpp"
 int main(int argc,char* argv[])
 {
     //单例模式
@@ -98,6 +98,13 @@ int main(int argc,char* argv[])
     p1->Show();
     ProtoType* p2 = p->DeepClone();
     p2->Show();
+
+
+
+    //结构模式
+
+    //外观模式
+    TestKTVMode();
 
     return 0;
 }
