@@ -3,6 +3,7 @@
 #include "observer.hpp"
 #include "factory.hpp"
 #include "buildder.hpp"
+#include "prototype.hpp"
 
 int main(int argc,char* argv[])
 {
@@ -89,6 +90,14 @@ int main(int argc,char* argv[])
     Director director2(builder);
     product = director2.Build();
     std::cout << "part1=" << product->part1 << " part2=" << product->part2 << " part3=" << product->part3 << std::endl;
+
+    //原型模式
+    std::string str = "123";
+    ProtoType* p = new ConcreateProtoType(100, &str);
+    ProtoType* p1 = p->Clone();
+    p1->Show();
+    ProtoType* p2 = p->DeepClone();
+    p2->Show();
 
     return 0;
 }
