@@ -37,6 +37,8 @@ class SimpleFactory
                 return new Product1();
             else if(type == "Product2")
                 return new Product2();
+            else
+                return new BaseProduct();
         }
 };
 
